@@ -1,0 +1,8 @@
+            /* --------------------------------------------------- */
+                       E-commerce-project with react & laravel
+            /* --------------------------------------------------- */
+
+* Frontend-react:
+1. Lets install a react app
+2. Lets install some packages -> react-bootstrap, react-router 
+3. 
