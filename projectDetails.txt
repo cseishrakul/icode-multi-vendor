@@ -9,3 +9,5 @@
 
 
 * Backend-laravel:
+1. Lets install laravel and connect it with database.After connecting to the database lets have some users in users table and lets fetch them using api.
+2. For fetch users lets create a controller call ApiController.
