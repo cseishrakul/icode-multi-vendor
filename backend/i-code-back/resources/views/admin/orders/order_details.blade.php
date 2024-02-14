@@ -3,6 +3,14 @@
 @section('content')
     <div class="main-panel">
         <div class="content-wrapper">
+            @if (Session::has('success_message'))
+                <div class="alert alert-success alert-dismissable fade show" role="alert">
+                    <strong>Success:</strong> {{ Session::get('success_message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-md-12 grid-margin">
                     <div class="row">
@@ -317,6 +325,26 @@
                         <div class="card-body">
                             <h4 class="card-title text-center">Update Order Status</h4>
                             <hr>
+                            @if (Auth::guard('admin')->user()->type != 'vendor')
+                                <form action="{{ url('admin/update-order-status') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="order_id" value="{{ $orderDetails['id'] }}">
+                                    <select name="order_status" id="" class="form-control">
+                                        <option value="">Select</option>
+                                        @foreach ($orderStatus as $status)
+                                            <option value="{{ $status['name'] }}"
+                                                @if (!empty($orderDetails['order_status']) && $orderDetails['order_status'] == $status['name']) selected="" @endif>{{ $status['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary mt-3">Update</button>
+                                </form>
+                            @else
+                                <div class="text-center pt-5 mt-5">
+                                    <alert class="alert alert-danger">This Feature Is Restricted!</alert>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -331,6 +359,7 @@
                             <th>Product Size</th>
                             <th>Product Color</th>
                             <th>Product Qty</th>
+                            <th>Item Status</th>
                         </tr>
                         @foreach ($orderDetails['orders_products'] as $product)
                             <tr>
@@ -338,7 +367,8 @@
                                     @php
                                         $getProductImage = Product::getProductImage($product['product_id']);
                                     @endphp
-                                    <a href="{{ url('product/' . $product['product_id']) }}" target="_blank" class="">
+                                    <a href="{{ url('product/' . $product['product_id']) }}" target="_blank"
+                                        class="">
                                         <img style="width: 100px;height:100px"
                                             src="{{ asset('admin/photos/product_images/small/' . $getProductImage) }}"
                                             alt="">
@@ -349,6 +379,22 @@
                                 <td> {{ $product['product_size'] }} </td>
                                 <td> {{ $product['product_color'] }} </td>
                                 <td> {{ $product['product_qty'] }} </td>
+                                <td>
+                                    <form action="{{ url('admin/update-order-item-status') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="order_item_id" value="{{ $product['id'] }}">
+                                        <select name="order_item_status" id="" class="form-control">
+                                            <option value="">Select</option>
+                                            @foreach ($orderItemStatus as $status)
+                                                <option value="{{ $status['name'] }}"
+                                                    @if (!empty($product['item_status']) && $product['item_status'] == $status['name']) selected="" @endif>
+                                                    {{ $status['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-primary mt-3">Update</button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </table>

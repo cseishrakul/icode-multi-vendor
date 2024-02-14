@@ -157,7 +157,7 @@
 
     19.2 Lets have orders_products table and model in project and in db_field:
 
-        $table->integer('order_id');$table->integer('user_id');$table->integer('vendor_id');$table->integer('admin_id');$table->integer('product_id');$table->string('product_code');$table->string('product_name');$table->string('product_color');$table->string('product_size');$table->float('product_price');$table->integer('product_qty');
+        $table->integer('order_id');$table->integer('user_id');$table->integer('vendor_id');$table->integer('admin_id');$table->integer('product_id');$table->string('product_code');$table->string('product_name');$table->string('product_color');$table->string('product_size');$table->float('product_price');$table->integer('product_qty');$table->string('order_status');
 
     19.3 Lets place an order with cash on delivery option and fill up both data table at a same time.For this lets use DB::beginTransaction() and DB::commit() and have codes for entering data in dataTables between this.
 
@@ -174,3 +174,26 @@
     20.5 Lets show orders in admin panel & the products added by vendors show those products order details in there dashboard.They will only see order details about which product they have been added in the website.
 
     20.6 Lets show orders details page in admin panel.Where admin can see Order details,customer details,delivery addresses,update order status,ordered products full details product name code image color qty etc.
+
+    20.7 For order status lets have a order_status table in database.And fetch data from order status db_table to admin panel-order details page.And from here admin can update order status of those particular order and this order status will be updated on order_status data-field of orders table.Only admin can do this work.
+
+    20.8 For vendor lets disable the order_status update option.And he can only see the order details of those products whom he has been added.Lets have a table order_item_statuses in database.And fetch data from order item status db_table to product details of admin panel-order details page.And from here admin/vendor can update item status of those particular items and this item status will be updated on item_status data-field of order_products table.Both the admin and the vendor can perform this task. However, the admin can update all order items, while the vendor can only update items that they have uploaded.
+
+    20.9 Lets give user a order confirmation email when user procced a order with cash on delivery payment method.
+    20.10 Lets give user a email when admin / vendor update users order status.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Twilio
+    4Q53ZP8TDRT2BC11MPD23JY9

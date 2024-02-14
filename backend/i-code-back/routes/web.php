@@ -143,6 +143,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // Orders
         Route::get('orders',[AdminOrderController::class,'orders']);
         Route::get('orders/{id}',[AdminOrderController::class,'orderDetails']);
+        Route::post('update-order-status',[AdminOrderController::class,'updateOrderStatus']);
+        Route::post('update-order-item-status',[AdminOrderController::class,'updateOrderItemStatus']);
 
     });
 });

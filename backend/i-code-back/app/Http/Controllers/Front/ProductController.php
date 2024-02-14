@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Category;
@@ -554,6 +555,26 @@ class ProductController extends Controller
             // Insert Order Id in session variable
             Session::put('order_id', $order_id);
             DB::commit();
+
+            $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray();
+
+            if ($data['payment_gateway'] == "COD") {
+                // Send Order Email
+                $email = Auth::user()->email;
+                $messageData = [
+                    'email' => $email,
+                    'name' => Auth::user()->name,
+                    'order_id' => $order_id,
+                    'orderDetails' => $orderDetails,
+                ];
+                Mail::send('emails.order',$messageData,function($message) use ($email){
+                    $message->to($email)->subject('Order Placed - icode.in');
+                });
+
+                // Send Order SMS
+            } else {
+                echo "Prepaid payment method coming soon!";
+            }
             return redirect('thanks');
         }
         return view('front.products.checkout', compact('deliveryAddresses', 'countries', 'getCartItems'));
