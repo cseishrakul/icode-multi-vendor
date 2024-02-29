@@ -181,8 +181,12 @@
 
     20.9 Lets give user a order confirmation email when user procced a order with cash on delivery payment method.
     20.10 Lets give user a email when admin / vendor update users order status.
+    20.11 Lets have a orders_log table in database and inside this lets have order_id and order_status field.Whenever admin will update orderStatus it will be go in orders_log table as well.And from this table order status and created time will show at order_details in admin panel.
 
 
+    // Assign Courier into project:
+
+    21. Lets add courier_name and tracking_number table_field_name in orders table.In admin panel order details page lets have this two input field when update status will be changed to shipped.For on change commande lets use custom.js. And lets add a condition that whenever the couier_name and tracking_number will have data it will update this data to orders table where id will be current order_id;
 
 
 

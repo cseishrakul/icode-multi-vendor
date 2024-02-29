@@ -4,8 +4,20 @@
 
 * Frontend-react:
 1. Lets install a react app
-2. Lets install some packages -> react-bootstrap, react-router 
-3. 
+2. Lets install some packages -> react-bootstrap, react-router,axios
+
+// Get Data via axios:
+3. Lets fetch data from database via axios.For that lets use useState     
+   and create a function and inside this function lets fetch api of the database with the help of axios. Use this function inside useEffect(). For show data in output:
+        {variableNameFromUseState &&
+            variableNameFromUseState.length > 0 &&
+            variableNameFromUseState.map((userObj, index) => (
+                <li key={userObj.id}> {userObj.name} </li>
+            ))
+        },Here userObj and index are the perameter
+
+// Get api via Fetch:
+4. 
 
 
 * Backend-laravel:

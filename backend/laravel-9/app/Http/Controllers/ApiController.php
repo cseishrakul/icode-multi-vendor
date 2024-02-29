@@ -9,6 +9,7 @@ class ApiController extends Controller
 {
     public function getUsers(){
         $getUsers = User::get();
-        return $getUsers;
+        // return $getUsers;
+        return response()->json(['users'=>$getUsers],200);
     }
 }

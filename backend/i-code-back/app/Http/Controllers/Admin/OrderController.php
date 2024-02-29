@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItemStatus;
+use App\Models\OrdersLog;
 use App\Models\OrdersProduct;
 use App\Models\OrderStatus;
 use App\Models\User;
@@ -58,8 +59,11 @@ class OrderController extends Controller
         $userDetails = User::where('id', $orderDetails['user_id'])->first()->toArray();
         $orderStatus = OrderStatus::where('status', 1)->get()->toArray();
         $orderItemStatus = OrderItemStatus::where('status', 1)->get()->toArray();
+        $orderLog = OrdersLog::with('orders_products')->where('order_id', $id)->orderBy('id','desc')->get()->toArray();
 
-        return view('admin.orders.order_details', compact('orderDetails', 'userDetails', 'orderStatus', 'orderItemStatus'));
+        // dd($orderLog);
+
+        return view('admin.orders.order_details', compact('orderDetails', 'userDetails', 'orderStatus', 'orderItemStatus', 'orderLog'));
     }
 
     public function updateOrderStatus(Request $request)
@@ -69,22 +73,33 @@ class OrderController extends Controller
             // dd($data);
             Order::where('id', $data['order_id'])->update(['order_status' => $data['order_status']]);
 
+            // Update courier name and tracking number
+            if (!empty($data['courier_name']) && !empty($data['tracking_number'])) {
+                Order::where('id', $data['order_id'])->update(['courier_name' => $data['courier_name'], 'tracking_number' => $data['tracking_number']]);
+            }
+
+            // Update Orders Log
+            $log = new OrdersLog;
+            $log->order_id = $data['order_id'];
+            $log->order_status = $data['order_status'];
+            $log->save();
+
             // Get delivery details
-            $deliveryDetails = Order::select('mobile','email','name')->where('id',$data['order_id'])->first()->toArray();
+            $deliveryDetails = Order::select('mobile', 'email', 'name')->where('id', $data['order_id'])->first()->toArray();
 
             // Get Order details
-            $orderDetails = Order::with('orders_products')->where('id',$data['order_id'])->first()->toArray();
+            $orderDetails = Order::with('orders_products')->where('id', $data['order_id'])->first()->toArray();
 
             // Send Order Status Update Email
             $email = $deliveryDetails['email'];
             $messageData = [
-                'email'=>$email,
+                'email' => $email,
                 'name' => $deliveryDetails['name'],
                 'order_id' => $data['order_id'],
                 'orderDetails' => $orderDetails,
                 'order_status' => $data['order_status'],
             ];
-            Mail::send('emails.order_status',$messageData,function($message) use ($email){
+            Mail::send('emails.order_status', $messageData, function ($message) use ($email) {
                 $message->to($email)->subject('Order Status Update - iCode.com');
             });
 
@@ -101,24 +116,35 @@ class OrderController extends Controller
             // dd($data);
             OrdersProduct::where('id', $data['order_item_id'])->update(['item_status' => $data['order_item_status']]);
 
-            $getOrderId = OrdersProduct::select('order_id')->where('id',$data['order_item_id'])->first()->toArray();
+            // Update courier name and tracking number
+            if (!empty($data['item_courier_name']) && !empty($data['item_tracking_number'])) {
+                OrdersProduct::where('id', $data['order_item_id'])->update(['courier_name' => $data['item_courier_name'], 'tracking_number' => $data['item_tracking_number']]);
+            }
+
+            $getOrderId = OrdersProduct::select('order_id')->where('id', $data['order_item_id'])->first()->toArray();
+
+            $log = new OrdersLog;
+            $log->order_id = $getOrderId['order_id'];
+            $log->order_item_id = $data['order_item_id'];
+            $log->order_status = $data['order_item_status'];
+            $log->save();
 
             // Get delivery details
-            $deliveryDetails = Order::select('mobile','email','name')->where('id',$getOrderId['order_id'])->first()->toArray();
+            $deliveryDetails = Order::select('mobile', 'email', 'name')->where('id', $getOrderId['order_id'])->first()->toArray();
 
             // Get Order details
-            $orderDetails = Order::with('orders_products')->where('id',$getOrderId['order_id'])->first()->toArray();
+            $orderDetails = Order::with('orders_products')->where('id', $getOrderId['order_id'])->first()->toArray();
 
             // Send Order Status Update Email
             $email = $deliveryDetails['email'];
             $messageData = [
-                'email'=>$email,
+                'email' => $email,
                 'name' => $deliveryDetails['name'],
                 'order_id' => $getOrderId['order_id'],
                 'orderDetails' => $orderDetails,
                 'order_status' => $data['order_item_status'],
             ];
-            Mail::send('emails.order_status',$messageData,function($message) use ($email){
+            Mail::send('emails.order_status', $messageData, function ($message) use ($email) {
                 $message->to($email)->subject('Order Item Status Update - iCode.com');
             });
 

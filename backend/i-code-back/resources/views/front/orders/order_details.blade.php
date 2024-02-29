@@ -83,6 +83,20 @@
                             <td> {{ $orderDetails['coupon_amount'] }} </td>
                         </tr>
                     @endif
+                    @if ($orderDetails['courier_name']!=='')
+                        <tr>
+                            <th>Courier Name: </th>
+                            <td>
+                                {{$orderDetails['courier_name']}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tracking Number: </th>
+                            <td>
+                                {{$orderDetails['tracking_number']}}
+                            </td>
+                        </tr>
+                    @endif
                     <tr>
                         <th>Payment Method</th>
                         <td> {{ $orderDetails['payment_method'] }} </td>
