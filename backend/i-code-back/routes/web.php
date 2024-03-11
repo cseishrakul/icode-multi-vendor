@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Front\AddressController;
 use App\Http\Controllers\Front\IndexController;
 use App\Http\Controllers\Front\OrderController;
+use App\Http\Controllers\Front\PaypalController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use App\Http\Controllers\Front\UserController;
 use App\Http\Controllers\Front\VendorController;
@@ -146,6 +147,11 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::post('update-order-status',[AdminOrderController::class,'updateOrderStatus']);
         Route::post('update-order-item-status',[AdminOrderController::class,'updateOrderItemStatus']);
 
+        // Invoice 
+        Route::get('orders/invoice/{id}',[AdminOrderController::class,'orderInvoice']);
+        Route::get('orders/invoice/pdf/{id}',[AdminOrderController::class,'viewPdfInvoice']);
+
+
     });
 });
 // End Admin Route Group
@@ -223,6 +229,9 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
         Route::get('thanks', [FrontProductController::class, 'thanks']);
         // Users Orders
         Route::get('user/orders/{id?}', [OrderController::class, 'orders']);
+
+        // Paypal
+        Route::get('paypal',[PaypalController::class,'paypal']);
     });
 
     // User logout

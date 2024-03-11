@@ -1,49 +1,18 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Button from "react-bootstrap/Button";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Home from './Components/Home';
+import React from "react";
+import Home from "./Components/Home";
 import Function from "./Components/Function";
+import Text1 from "./Components/Function";
+import User from "./Components/User";
 
-function App() {
-  // Declare variable to to fetch users data from database
-  const [user, setUser] = useState([]);
-
-  // Via Axios
-
-  // const fetchData = () => {
-  //   return axios
-  //     .get("http://127.0.0.1:8000/api/users")
-  //     .then((response) => setUser(response.data["users"]));
-  // };
-
-  // Via Fetch
-
-  const fetchData = () => {
-    return fetch("http://127.0.0.1:8000/api/users")
-      .then((response) => response.json())
-      .then((data) => setUser(data["users"]));
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+const App = () => {
   return (
-    <div className="App">
-      <h2> User List </h2>
-      <ul>
-        {user &&
-          user.length > 0 &&
-          user.map((userObj, index) => (
-            <li key={userObj.id}> {userObj.name} {userObj.email} </li>
-          ))}
-      </ul>
-      <Home />
-      <Function />
+    <div>
+      <Function text="This is a functional component.We dont believe in class component" />
+      <Text1 text="This is a test of using two function in one component" />
+      <User name={{data:'amit'}} address={{data:'Sylhet'}} />
+      <Home text="This is class component and we are try to use props in it." />
     </div>
   );
-}
+};
 
 export default App;

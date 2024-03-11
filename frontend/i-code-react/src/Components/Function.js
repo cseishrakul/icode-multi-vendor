@@ -1,9 +1,15 @@
 import React from 'react'
 
-const Function = () => {
+const Function = (props) => {
   return (
-    <div>This Is Function Component</div>
+    <div>{props.text}</div>
   )
+}
+
+const Text1 = (props) => {
+    return (
+        <div>{props.text}</div>
+    )
 }
 
 export default Function

@@ -122,6 +122,11 @@ $(document).ready(function () {
         }
     });
 
+    // Show loader at the time of order placement
+    $(document).on("click", "#placeOrder", function () {
+        $('.loader').show();
+    });
+
     // User register form validation
     $("#registerForm").submit(function () {
         $(".loader").show();
@@ -394,6 +399,7 @@ $(document).ready(function () {
                     });
                 }
                 $("#deliveryAddresses").html(resp.view);
+                window.location.href = "checkout";
             },
             error: function () {
                 alert("Error");
@@ -416,6 +422,7 @@ $(document).ready(function () {
                 data: { addressid: addressid },
                 success: function (resp) {
                     $("#deliveryAddresses").html(resp.view);
+                    window.location.href = "checkout";
                 },
                 error: function () {
                     alert("Error");

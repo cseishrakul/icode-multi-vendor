@@ -81,6 +81,12 @@
                                                         <a title="View Order Details" href="{{url('admin/orders/'.$order['id'])}}" class="">
                                                         <i class="mdi mdi-file-document" style="font-size:25px"></i>
                                                         </a>
+                                                        <a target="_blank" title="View Order Invoice" href="{{url('admin/orders/invoice/'.$order['id'])}}" class="">
+                                                        <i class="mdi mdi-printer" style="font-size:25px"></i>
+                                                        </a>
+                                                        <a target="_blank" title="Print PDF Invoice" href="{{url('admin/orders/invoice/pdf/'.$order['id'])}}" class="">
+                                                        <i class="mdi mdi-file-pdf" style="font-size:25px"></i>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             @endif

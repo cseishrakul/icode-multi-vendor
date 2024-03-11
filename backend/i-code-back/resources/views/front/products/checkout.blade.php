@@ -30,21 +30,53 @@
                     </button>
                 </div>
             @endif
-            <form name="checkoutForm" id="checkoutForm" action="{{ url('/checkout') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <!-- First-Accordion -->
 
-                        <!-- First-Accordion /- -->
-                        <div class="row">
-                            <!-- Billing-&-Shipping-Details -->
-                            <div class="col-lg-7" id="deliveryAddresses">
-                                @include('front.products.delivery_addresses');
-                            </div>
-                            <!-- Billing-&-Shipping-Details /- -->
-                            <!-- Checkout -->
-                            <div class="col-lg-5">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <!-- First-Accordion -->
+
+                    <!-- First-Accordion /- -->
+                    <div class="row">
+                        <!-- Billing-&-Shipping-Details -->
+                        <div class="col-lg-7" id="deliveryAddresses">
+                            @include('front.products.delivery_addresses');
+                        </div>
+                        <!-- Billing-&-Shipping-Details /- -->
+                        <!-- Checkout -->
+                        <div class="col-lg-5">
+                            <form name="checkoutForm" id="checkoutForm" action="{{ url('/checkout') }}" method="POST">
+                                @csrf
+                                @if (count($deliveryAddresses) > 0)
+                                    <h4 class="section-h4">Delivery Addresses</h4>
+                                    @foreach ($deliveryAddresses as $address)
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <div class="d-flex">
+                                                    <div class="control-group">
+                                                        <input type="radio" name="address_id"
+                                                            id="address{{ $address['id'] }}" value="{{ $address['id'] }}">
+                                                    </div>
+                                                    &nbsp;&nbsp;
+                                                    <div class="mb-3">
+                                                        <label for="control-label">{{ $address['name'] }},
+                                                            {{ $address['address'] }},
+                                                            {{ $address['city'] }},
+                                                            {{ $address['state'] }},{{ $address['country'] }},{{ $address['mobile'] }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <div class="d-flex">
+                                                    <a href="javascript:;" data-addressid="{{ $address['id'] }}"
+                                                        class="editAddress mr-1" style="">Edit</a>
+                                                    <a href="javascript:;" data-addressid="{{ $address['id'] }}"
+                                                        class="removeAddress" style="">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
                                 <h4 class="section-h4">Your Order</h4>
                                 <div class="order-table">
                                     <table class="u-s-m-b-13">
@@ -66,7 +98,8 @@
                                                             <img width="40"
                                                                 src="{{ asset('admin/photos/product_images/small/' . $item['product']['product_image']) }}"
                                                                 alt="Product">
-                                                            <h6 class="order-h6 mt-4">{{ $item['product']['product_name'] }}
+                                                            <h6 class="order-h6 mt-4">
+                                                                {{ $item['product']['product_name'] }}
                                                                 <br /> {{ $item['size'] }} /
                                                                 {{ $item['product']['product_color'] }}
                                                             </h6>
@@ -82,7 +115,9 @@
                                                     </td>
                                                 </tr>
                                                 @php
-                                                    $total_price = $total_price + $getDiscountAttributePrice['final_price'] * $item['quantity'];
+                                                    $total_price =
+                                                        $total_price +
+                                                        $getDiscountAttributePrice['final_price'] * $item['quantity'];
                                                 @endphp
                                             @endforeach
                                             <tr>
@@ -149,14 +184,15 @@
                                             <a href="terms-and-conditions.html" class="u-c-brand">terms & conditions</a>
                                         </label>
                                     </div>
-                                    <button type="submit" class="button button-outline-secondary">Place Order</button>
+                                    <button type="submit" class="button button-outline-secondary" id="placeOrder">Place Order</button>
                                 </div>
-                            </div>
-                            <!-- Checkout /- -->
+
+                            </form>
                         </div>
+                        <!-- Checkout /- -->
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
     <!-- Checkout-Page /- -->

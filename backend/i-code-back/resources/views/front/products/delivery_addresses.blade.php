@@ -1,38 +1,15 @@
-@if (count($deliveryAddresses) > 0)
-    <h4 class="section-h4">Delivery Addresses</h4>
-    @foreach ($deliveryAddresses as $address)
-        <div class="row">
-            <div class="col-md-10">
-                <div class="d-flex">
-                    <div class="control-group">
-                        <input type="radio" name="address_id" id="address{{ $address['id'] }}"
-                            value="{{ $address['id'] }}">
-                    </div>
-                    &nbsp;&nbsp;
-                    <div class="mb-3">
-                        <label for="control-label">{{ $address['name'] }}, {{ $address['address'] }},
-                            {{ $address['city'] }},
-                            {{ $address['state'] }},{{ $address['country'] }},{{ $address['mobile'] }} </label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="d-flex">
-                    <a href="javascript:;" data-addressid="{{ $address['id'] }}" class="editAddress mr-1"
-                    style="">Edit</a>
-                <a href="javascript:;" data-addressid="{{ $address['id'] }}" class="removeAddress"
-                    style="">Remove</a>
-                </div>
-            </div>
-        </div>
-    @endforeach
-@endif
+
 <h4 class="section-h4 deliveryText">Add New Delivery Address</h4>
 <div class="u-s-m-b-24">
     <input type="checkbox" class="check-box" id="ship-to-different-address" data-toggle="collapse"
         data-target="#showdifferent">
-    <label class="label-text newAddress" for="ship-to-different-address">Ship to a different
-        address?</label>
+        @if (count($deliveryAddresses)>0)
+        <label class="label-text newAddress" for="ship-to-different-address">Ship to a different
+            address?</label>
+        @else
+        <label class="label-text newAddress" for="ship-to-different-address">Check To Add Delivery Address!</label>
+        @endif
+    
 </div>
 <div class="collapse" id="showdifferent">
     <!-- Form-Fields -->

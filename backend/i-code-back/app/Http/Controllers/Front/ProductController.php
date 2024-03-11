@@ -360,6 +360,16 @@ class ProductController extends Controller
                     $message = "This coupon is expired";
                 }
 
+                // Check if coupon is for single time
+                if ($couponDetails->coupon_type == 'Single Time') {
+                    // Check in order table if coupon already availed by user
+                    $couponCount = Order::where(['coupon_code' => $data['code'], 'user_id' => Auth::user()->id])->count();
+
+                    if ($couponCount >= 1) {
+                        $message = "This coupon is already availed by the user";
+                    }
+                }
+
                 // Check if coupon is from selected categories
 
                 // Get all selected categories from coupon
@@ -423,7 +433,7 @@ class ProductController extends Controller
                 } else {
                     // Coupon code is corrent
                     // Check if coupon amount is fixed or percentage
-                    if ($couponDetails->amount_type == "fixed") {
+                    if ($couponDetails->amount_type == "Fixed") {
                         $couponAmount = $couponDetails->amount;
                     } else {
                         $couponAmount = $total_amount * ($couponDetails->amount / 100);
@@ -567,11 +577,14 @@ class ProductController extends Controller
                     'order_id' => $order_id,
                     'orderDetails' => $orderDetails,
                 ];
-                Mail::send('emails.order',$messageData,function($message) use ($email){
+                Mail::send('emails.order', $messageData, function ($message) use ($email) {
                     $message->to($email)->subject('Order Placed - icode.in');
                 });
 
                 // Send Order SMS
+            } else if ($data['payment_gateway'] == 'Paypal') {
+                // paypal redirect user to paypal page after saving order
+                return redirect('/paypal');
             } else {
                 echo "Prepaid payment method coming soon!";
             }

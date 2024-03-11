@@ -17,7 +17,14 @@
         },Here userObj and index are the perameter
 
 // Get api via Fetch:
-4. 
+4. Lets fetch data from database via Fetch.For that lets use useState     
+   and create a function and inside this function lets fetch api of the database with the help of fetch. Use this function inside useEffect(). For show data in output:
+        {variableNameFromUseState &&
+            variableNameFromUseState.length > 0 &&
+            variableNameFromUseState.map((userObj, index) => (
+                <li key={userObj.id}> {userObj.name} </li>
+            ))
+        },Here userObj and index are the perameter
 
 
 * Backend-laravel:

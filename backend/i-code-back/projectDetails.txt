@@ -134,6 +134,7 @@
     16.6 Lets Update coupon's from the admin panel.
     16.7 Lets check coupon status active or not, expiry date is gone or not, is coupon is for selected category or not, coupon is for user or not, if not then show error message, if vendor add any coupon then it'll be only usable in that products whom added by this vendor.
     16.8 Lets use coupon in cart item and make discount as coupon amount type fixed or percentage.
+    16.9 Lets make condition on coupon type.If the coupon type is single time then it cannot be reusable.
      
     17. Lets Fetch all users info from database to admin panel
 
@@ -190,11 +191,18 @@
 
 
 
+    // Invoice
+    22. Lets create every orders invoice from admin panel.
+
+    // Barcode 
+    23. Lets install laravel package : composer require milon/barcode
+    And from this github lets use barcode or qr code like this:
+    -- echo DNS1D::getBarcodeHTML($product['product_code'], 'C39');
 
 
 
-
-
+    // Paypal intregrate
+    1. lets make a controller inside front for paypal.
 
 
 

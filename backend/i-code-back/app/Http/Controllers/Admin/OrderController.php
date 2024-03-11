@@ -12,6 +12,7 @@ use App\Models\OrderStatus;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
+use Dompdf\Dompdf;
 
 class OrderController extends Controller
 {
@@ -59,7 +60,7 @@ class OrderController extends Controller
         $userDetails = User::where('id', $orderDetails['user_id'])->first()->toArray();
         $orderStatus = OrderStatus::where('status', 1)->get()->toArray();
         $orderItemStatus = OrderItemStatus::where('status', 1)->get()->toArray();
-        $orderLog = OrdersLog::with('orders_products')->where('order_id', $id)->orderBy('id','desc')->get()->toArray();
+        $orderLog = OrdersLog::with('orders_products')->where('order_id', $id)->orderBy('id', 'desc')->get()->toArray();
 
         // dd($orderLog);
 
@@ -152,5 +153,36 @@ class OrderController extends Controller
             $message = "Item status has been updated successfully!";
             return redirect()->back()->with('success_message', $message);
         }
+    }
+
+    public function orderInvoice($order_id)
+    {
+        $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray();
+        // $user_id = $orderDetails['user_id'];
+        $userDetails = User::where('id', $orderDetails['user_id'])->first()->toArray();
+        // dd($userDetails);
+        return view('admin.orders.order_invoice', compact('orderDetails', 'userDetails'));
+    }
+
+    public function viewPdfInvoice($order_id)
+    {
+        $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray();
+        // $user_id = $orderDetails['user_id'];
+        $userDetails = User::where('id', $orderDetails['user_id'])->first()->toArray();
+        // dd($userDetails);
+        // instantiate and use the dompdf class
+        $invoiceHTML = view('pdf.invoice',compact('orderDetails','userDetails'));
+        
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($invoiceHTML);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream();
     }
 }
