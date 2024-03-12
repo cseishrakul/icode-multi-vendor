@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\FilterController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\ShippingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Front\AddressController;
 use App\Http\Controllers\Front\IndexController;
@@ -142,16 +143,18 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::post('update-user-status', [AdminUserController::class, 'updateUserStatus']);
 
         // Orders
-        Route::get('orders',[AdminOrderController::class,'orders']);
-        Route::get('orders/{id}',[AdminOrderController::class,'orderDetails']);
-        Route::post('update-order-status',[AdminOrderController::class,'updateOrderStatus']);
-        Route::post('update-order-item-status',[AdminOrderController::class,'updateOrderItemStatus']);
+        Route::get('orders', [AdminOrderController::class, 'orders']);
+        Route::get('orders/{id}', [AdminOrderController::class, 'orderDetails']);
+        Route::post('update-order-status', [AdminOrderController::class, 'updateOrderStatus']);
+        Route::post('update-order-item-status', [AdminOrderController::class, 'updateOrderItemStatus']);
 
         // Invoice 
-        Route::get('orders/invoice/{id}',[AdminOrderController::class,'orderInvoice']);
-        Route::get('orders/invoice/pdf/{id}',[AdminOrderController::class,'viewPdfInvoice']);
+        Route::get('orders/invoice/{id}', [AdminOrderController::class, 'orderInvoice']);
+        Route::get('orders/invoice/pdf/{id}', [AdminOrderController::class, 'viewPdfInvoice']);
 
-
+        // Shipping Charges
+        Route::get("shipping-charges", [ShippingController::class, 'shippingCharges']);
+        Route::post('update-shipping-status', [ShippingController::class, 'updateShippingStatus']);
     });
 });
 // End Admin Route Group
@@ -231,7 +234,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
         Route::get('user/orders/{id?}', [OrderController::class, 'orders']);
 
         // Paypal
-        Route::get('paypal',[PaypalController::class,'paypal']);
+        Route::get('paypal', [PaypalController::class, 'paypal']);
     });
 
     // User logout

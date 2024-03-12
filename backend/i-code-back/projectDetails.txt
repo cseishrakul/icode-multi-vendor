@@ -204,7 +204,17 @@
     // Paypal intregrate
     1. lets make a controller inside front for paypal.
 
+    ** Lets update our project to laravel 10
 
+    // Shipping charges 
+    ** We'll set our charges depend on which coutry we are giving delivery.
+    1. Lets create a shipping_charges db table:
+            $table->id();
+            $table->string('country');
+            $table->float('rate');
+            $table->tinyInteger('status');
+            $table->timestamps();
+    2. Lets show all data from database in admin panel.Only admin can see this data.And lets update every data status from admin panel as well.For do all this work lets add ShippingCharge model and admin/ShippingController as well.
 
 
 // Twilio

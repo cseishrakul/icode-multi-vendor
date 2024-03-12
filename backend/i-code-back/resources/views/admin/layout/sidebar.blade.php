@@ -162,6 +162,19 @@
                     </ul>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic8" aria-expanded="false"
+                    aria-controls="ui-basic8">
+                    <i class="icon-layout menu-icon"></i>
+                    <span class="menu-title">Shipping</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="ui-basic8">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/shipping-charges') }}">Shipping Charges</a></li>
+                    </ul>
+                </div>
+            </li>
         @endif
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false"
