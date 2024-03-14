@@ -155,6 +155,7 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // Shipping Charges
         Route::get("shipping-charges", [ShippingController::class, 'shippingCharges']);
         Route::post('update-shipping-status', [ShippingController::class, 'updateShippingStatus']);
+        Route::match(['get', 'post'], 'edit-shipping-charge/{id}', [ShippingController::class, 'editShippingCharges']);
     });
 });
 // End Admin Route Group

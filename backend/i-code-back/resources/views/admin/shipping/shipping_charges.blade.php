@@ -13,7 +13,7 @@
 
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <a href="{{ url('admin/add-edit-shipping/') }}" class="btn btn-info">Shipping Charges</a>
+                                    <a href="#" class="btn btn-info">Shipping Charges</a>
                                 </div>
                             </div>
                             <hr>
@@ -36,7 +36,19 @@
                                                 Country Name
                                             </th>
                                             <th>
-                                                Shipping Charge
+                                                Rate (0 - 500g)
+                                            </th>
+                                            <th>
+                                                Rate (501 - 1000g)
+                                            </th>
+                                            <th>
+                                                Rate (1001 - 2000g)
+                                            </th>
+                                            <th>
+                                                Rate (2001 - 5000g)
+                                            </th>
+                                            <th>
+                                                Rate (Above 5000g)
                                             </th>
                                             <th>
                                                 Status
@@ -56,7 +68,19 @@
                                                     {{ $shippingCharge['country'] }}
                                                 </td>
                                                 <td>
-                                                    {{ $shippingCharge['rate'] }}
+                                                    {{ $shippingCharge['0_500g'] }}
+                                                </td>
+                                                <td>
+                                                    {{ $shippingCharge['501_1000g'] }}
+                                                </td>
+                                                <td>
+                                                    {{ $shippingCharge['1001_2000g'] }}
+                                                </td>
+                                                <td>
+                                                    {{ $shippingCharge['2001_5000g'] }}
+                                                </td>
+                                                <td>
+                                                    {{ $shippingCharge['above_5000g'] }}
                                                 </td>
                                                 <td>
                                                     @if ($shippingCharge['status'] == '1')
@@ -76,7 +100,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ url('admin/add-edit-shipping/' . $shippingCharge['id']) }}"
+                                                    <a href="{{ url('admin/edit-shipping-charge/' . $shippingCharge['id']) }}"
                                                         class="">
                                                         <i class="mdi mdi-pencil-box" style="font-size: 25px;"></i>
                                                     </a>

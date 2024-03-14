@@ -1,9 +1,17 @@
 <?php
 use App\Models\Section;
 use App\Models\Product;
+use App\Models\Cart;
 $sections = Section::sections();
 // echo "<pre>";print_r($sections);die;
 $totalCartItems = totalCartItems();
+$cartItem = Cart::count();
+if (Auth::check()) {
+    $cartItem = Cart::where('user_id', Auth::id())->distinct('product_id')->count();
+} else {
+    $cartItem = Cart::where('session_id', Session::get('session_id'))->distinct('product_id')->count();
+}
+
 ?>
 
 <header>
@@ -160,8 +168,8 @@ $totalCartItems = totalCartItems();
                             <li>
                                 <a id="mini-cart-trigger">
                                     <i class="ion ion-md-basket"></i>
-                                    <span class="item-counter totalCartItems"> {{ $totalCartItems }} </span>
-                                    <span class="item-price"> 220.00 TK </span>
+                                    <span class="item-counter totalCartItems"> {{ $cartItem }} </span>
+                                    <span class="item-price"> 220.00 Tk </span>
                                 </a>
                             </li>
                         </ul>

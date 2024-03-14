@@ -66,11 +66,11 @@
                     </tr>
                     <tr>
                         <th>Order Total</th>
-                        <td> {{ $orderDetails['grand_total'] }} </td>
+                        <td> {{ $orderDetails['grand_total'] }} Tk</td>
                     </tr>
                     <tr>
                         <th>Shipping Charges</th>
-                        <td> {{ $orderDetails['shipping_charges'] }} </td>
+                        <td> {{ $orderDetails['shipping_charges'] }} Tk</td>
                     </tr>
 
                     @if ($orderDetails['coupon_code'] != null)

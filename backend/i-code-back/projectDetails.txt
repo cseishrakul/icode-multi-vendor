@@ -202,19 +202,65 @@
 
 
     // Paypal intregrate
-    1. lets make a controller inside front for paypal.
+    24. lets make a controller inside front for paypal.
 
     ** Lets update our project to laravel 10
 
     // Shipping charges 
-    ** We'll set our charges depend on which coutry we are giving delivery.
-    1. Lets create a shipping_charges db table:
+    25. ** We'll set our charges depend on which coutry we are giving delivery.
+    25.1. Lets create a shipping_charges db table:
             $table->id();
             $table->string('country');
             $table->float('rate');
             $table->tinyInteger('status');
             $table->timestamps();
-    2. Lets show all data from database in admin panel.Only admin can see this data.And lets update every data status from admin panel as well.For do all this work lets add ShippingCharge model and admin/ShippingController as well.
+    25.2. Lets show all data from database in admin panel.Only admin can see this data.And lets update every data status from admin panel as well.For do all this work lets add ShippingCharge model and admin/ShippingController as well.
+    25.3. Lets edit shipping details from admin panel.We'll just edit shipping rate here.
+
+    25.4. Lets select shipping address by user in  checkout page and from this shipping address we'll collect users country and we'll collect this country shipping rate from shipping_charges table.And we'll add this shipping rate in grand total of checkout page.For this:
+        25.4.1 lets create a function in ShippingCharge model by which we'll collect rate of users address country.
+        25.4.2 In checkout function lets add 25.4.1 function in deliveyAddress model and add the shipping rate in delivery_addresses table->shipping_charges.
+        25.4.3 In checkout blade page in which input users are selecting their delivery address there lets add some attribute = shipping_charges="{{ $address['shipping_charges'] }}" total_price={{ $total_price }}coupon_amount={{ Session::get('couponAmount') }}
+        25.4.4 Then in custom.js lets add this function->
+            $("input[name=address_id]").bind("change", function () {
+            var shipping_charges = $(this).attr("shipping_charges");
+            var total_price = $(this).attr("total_price");
+            var coupon_amount = $(this).attr("coupon_amount");
+            $(".shipping_charges").html(shipping_charges + "Tk");
+            if (coupon_amount == "") {
+                coupon_amount = 0;
+            }
+            $(".couponAmount").html(coupon_amount + " Tk");
+            var grand_total =
+                parseInt(total_price) +
+                parseInt(shipping_charges) -
+                parseInt(coupon_amount);
+            // alert(grand_total);
+            $(".grand_total").html(grand_total + " Tk");
+        });
+
+        25.4.5 By using classnames of 25.4.4 lets show output in checkout page without page refresh.
+        25.4.6 In chekout function again lets add shipping_charges from ShippingCharge model function ->
+            $shipping_charges = 0;
+            // Get Shipping Charges
+            $shipping_charges = ShippingCharge::getShippingCharges($deliveryAddress['country']);
+        And lets add this charge in order table;
+
+    // Advance Shipping module
+    26. Lets remove rate field from shipping_charges db_table and lets add some others colums like:
+    0_500g,501_1000g,1001_2000g,2001_5000g,above_5000g...
+    and lets add/edit data on this field and show them in admin panel.We want to fixed shipping charges according to the weight of the products.
+    26.1 Lets fetch product weight in cart model and lets fetch shipping charges with the help of product weight from ShippingCharge model.Lets fetch the total shipping charge in checkout function while user processed the checkout.
+
+    // Stock management
+    27. Lets reduce product stock from product attribute db_table while a user order the product.For that lets get help from productAttribute model and in chekout function when order place lets reduce number of product from stock of product_attributes db_table and update it in admin panel.
+    ** when we'll add others payment_gateway so their also we have to reduce stock when user cofirm order with payment done;
+
+    // Website security
+    28.1 Lets prevent order of those products whom status are 0, out of stock,product attribute status 0 or not available or whom products category are disabled.
+    28.2 Lets use Session::flush() in userController logout function so that if the user logout then the cart item will be also get remove from the website.
+    28.3 Lets add if condition in addCart function so that if any user add product on 0 quantity it will automatically make quantity to 1;  
+
 
 
 // Twilio

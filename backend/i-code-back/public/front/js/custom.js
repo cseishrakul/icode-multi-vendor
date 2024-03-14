@@ -44,47 +44,95 @@ $(document).ready(function () {
     });
 
     // Update cart items qty
+    // $(document).on("click", ".updateCartItem", function () {
+    //     if ($(this).hasClass("plus-a")) {
+    //         // Get Qty
+    //         var quantity = $(this).data("qty");
+
+    //         // Increase the qty by 1
+    //         new_qty = parseInt(quantity) + 1;
+    //         // alert(new_qty);
+    //     }
+
+    //     if ($(this).hasClass("minus-a")) {
+    //         // Get Qty
+    //         var quantity = $(this).data("qty");
+
+    //         // Check qty is atleast 1
+    //         if (quantity <= 1) {
+    //             alert("Item  quantity must be 1 or greater");
+    //             return false;
+    //         }
+
+    //         // Increase the qty by 1
+    //         new_qty = parseInt(quantity) - 1;
+    //         // alert(new_qty);
+    //     }
+    //     var cartid = $(this).data("cartid");
+    //     // alert(cartId);
+    //     $.ajax({
+    //         headers: {
+    //             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    //         },
+    //         data: {
+    //             cartid: cartid,
+    //             qty: new_qty,
+    //         },
+    //         url: "/cart/update",
+    //         type: "post",
+    //         success: function (resp) {
+    //             $(".totalCartItems").html(resp.totalCartItems);
+    //             if (resp.status == false) {
+    //                 alert(resp.message);
+    //             }
+    //             $("#appendCartItems").html(resp.view);
+    //             $("#appendHeaderCartItem").html(resp.headerview);
+    //         },
+    //         error: function () {
+    //             alert("Error");
+    //         },
+    //     });
+    // });
+
+    // Test cart quantity
     $(document).on("click", ".updateCartItem", function () {
+        var quantity = $(this).data("qty");
+        var newQty;
+    
         if ($(this).hasClass("plus-a")) {
-            // Get Qty
-            var quantity = $(this).data("qty");
-
-            // Increase the qty by 1
-            new_qty = parseInt(quantity) + 1;
-            // alert(new_qty);
+            newQty = parseInt(quantity) + 1;
         }
-
+    
         if ($(this).hasClass("minus-a")) {
-            // Get Qty
-            var quantity = $(this).data("qty");
-
-            // Check qty is atleast 1
             if (quantity <= 1) {
-                alert("Item  quantity must be 1 or greater");
+                alert("Item quantity must be 1 or greater");
                 return false;
             }
-
-            // Increase the qty by 1
-            new_qty = parseInt(quantity) - 1;
-            // alert(new_qty);
+            newQty = parseInt(quantity) - 1;
         }
-        var cartid = $(this).data("cartid");
-        // alert(cartId);
+    
+        var cartId = $(this).data("cartid");
+    
         $.ajax({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             data: {
-                cartid: cartid,
-                qty: new_qty,
+                cartid: cartId,
+                qty: newQty,
             },
             url: "/cart/update",
             type: "post",
             success: function (resp) {
-                $(".totalCartItems").html(resp.totalCartItems);
+                // Update the total cart items count only if the quantity changes
+                if (resp.status && resp.quantityChanged) {
+                    $(".totalCartItems").html(resp.totalCartItems);
+                }
+    
                 if (resp.status == false) {
                     alert(resp.message);
                 }
+    
                 $("#appendCartItems").html(resp.view);
                 $("#appendHeaderCartItem").html(resp.headerview);
             },
@@ -93,6 +141,8 @@ $(document).ready(function () {
             },
         });
     });
+
+    
 
     // Delete Cart Items
     $(document).on("click", ".deleteCartItem", function () {
@@ -124,7 +174,7 @@ $(document).ready(function () {
 
     // Show loader at the time of order placement
     $(document).on("click", "#placeOrder", function () {
-        $('.loader').show();
+        $(".loader").show();
     });
 
     // User register form validation
@@ -429,5 +479,23 @@ $(document).ready(function () {
                 },
             });
         }
+    });
+
+    // Calculate grand total
+    $("input[name=address_id]").bind("change", function () {
+        var shipping_charges = $(this).attr("shipping_charges");
+        var total_price = $(this).attr("total_price");
+        var coupon_amount = $(this).attr("coupon_amount");
+        $(".shipping_charges").html(shipping_charges + "Tk");
+        if (coupon_amount == "") {
+            coupon_amount = 0;
+        }
+        $(".couponAmount").html(coupon_amount + " Tk");
+        var grand_total =
+            parseInt(total_price) +
+            parseInt(shipping_charges) -
+            parseInt(coupon_amount);
+        // alert(grand_total);
+        $(".grand_total").html(grand_total + " Tk");
     });
 });

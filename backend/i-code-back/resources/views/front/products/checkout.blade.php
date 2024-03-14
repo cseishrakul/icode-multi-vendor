@@ -54,7 +54,10 @@
                                                 <div class="d-flex">
                                                     <div class="control-group">
                                                         <input type="radio" name="address_id"
-                                                            id="address{{ $address['id'] }}" value="{{ $address['id'] }}">
+                                                            id="address{{ $address['id'] }}" value="{{ $address['id'] }}"
+                                                            shipping_charges="{{ $address['shipping_charges'] }}"
+                                                            total_price={{ $total_price }}
+                                                            coupon_amount={{ Session::get('couponAmount') }}>
                                                     </div>
                                                     &nbsp;&nbsp;
                                                     <div class="mb-3">
@@ -133,7 +136,9 @@
                                                     <h3 class="order-h6">Shipping Charges</h3>
                                                 </td>
                                                 <td>
-                                                    <h3 class="order-h6">0.00 Tk.</h3>
+                                                    <h3 class="order-h6">
+                                                        <span class="shipping_charges">0 Tk.</span>
+                                                    </h3>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -143,7 +148,8 @@
                                                 <td>
                                                     <h3 class="order-h6">
                                                         @if (Session::has('couponAmount'))
-                                                            {{ Session::get('couponAmount') }} Tk.
+                                                            <span class="couponAmount">{{ Session::get('couponAmount') }}
+                                                                Tk.</span>
                                                         @else
                                                             0.00 Tk.
                                                         @endif
@@ -155,8 +161,10 @@
                                                     <h3 class="order-h3">Grand Total</h3>
                                                 </td>
                                                 <td>
-                                                    <h3 class="order-h3">{{ $total_price - Session::get('couponAmount') }}
-                                                        Tk.
+                                                    <h3 class="order-h3"><strong class="grand_total">
+                                                            {{ $total_price - Session::get('couponAmount') }}
+                                                            Tk.
+                                                        </strong>
                                                     </h3>
                                                 </td>
                                             </tr>
@@ -184,7 +192,8 @@
                                             <a href="terms-and-conditions.html" class="u-c-brand">terms & conditions</a>
                                         </label>
                                     </div>
-                                    <button type="submit" class="button button-outline-secondary" id="placeOrder">Place Order</button>
+                                    <button type="submit" class="button button-outline-secondary" id="placeOrder">Place
+                                        Order</button>
                                 </div>
 
                             </form>

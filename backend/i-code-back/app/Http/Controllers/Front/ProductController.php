@@ -14,6 +14,7 @@ use App\Models\OrdersProduct;
 use App\Models\Product;
 use App\Models\ProductsAttribute;
 use App\Models\ProductsFilter;
+use App\Models\ShippingCharge;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -215,6 +216,9 @@ class ProductController extends Controller
     {
         if ($request->isMethod('post')) {
             $data = $request->all();
+            if($data['quantity'] <=0){
+                $data['quantity'] = 1;
+            }
             // echo "<pre>"; print_r($data);die; 
             $getProductStock = ProductsAttribute::getProductStock($data['product_id'], $data['size']);
 
@@ -462,7 +466,6 @@ class ProductController extends Controller
 
     public function checkout(Request $request)
     {
-        $deliveryAddresses = DeliveryAddress::deliveryAddresses();
         $countries = Country::where('status', 1)->get()->toArray();
         $getCartItems = Cart::getCartItems();
         // dd($getCartItems);
@@ -470,9 +473,64 @@ class ProductController extends Controller
             $message = "Shopping Cart is empty! Please add products to checkout!";
             return redirect('cart')->with('error_message', $message);
         }
+        $total_price = 0;
+        $total_weight = 0;
+        foreach ($getCartItems as $item) {
+            // echo "<pre>";print_r($item);die;
+            $attrPrice = Product::getDiscountAttributePrice($item['product_id'], $item['size']);
+            $total_price = $total_price + ($attrPrice['final_price'] * $item['quantity']);
+            $product_weight = $item['product']['product_weight'];
+            $total_weight = $total_weight + $product_weight;
+        }
+        $deliveryAddresses = DeliveryAddress::deliveryAddresses();
+        foreach ($deliveryAddresses as $key => $value) {
+            $shippingCharges = ShippingCharge::getShippingCharges($total_weight,$value['country']);
+            $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
+        }
+        // dd($deliveryAddresses);
+
         if ($request->isMethod('post')) {
             $data = $request->all();
             // echo "<pre>";print_r($data);die;
+
+            // Website security
+            foreach($getCartItems as $item){
+                // Prevent disabled products to order
+                $product_status = Product::getProductStatus($item['product_id']);
+                if($product_status==0){
+                    // Product::deleteCartProduct($item['product_id']);
+                    // $message = "One of the product is disabled! Please try again";
+                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message',$message);
+                }
+
+                // Prevent sold out products to order
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id'],$item['size']);
+                if($getProductStock == 0){
+                    // Product::deleteCartProduct($item['product_id']);
+                    // $message = "One of the product is sold out! Please try again";
+                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message',$message);
+                }
+                // Prevent disabled product attribute to order
+                $getAttributeStatus = ProductsAttribute::getAttibuteStatus($item['product_id'],$item['size']);
+                if($getAttributeStatus == 0){
+                    // Product::deleteCartProduct($item['product_id']);
+                    // $message = "One of the product attribute is disabled! Please try again";
+                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message',$message);
+                }
+
+                // Prevent disabled categorys products to order
+                $getCategoryStatus = Category::getCategoryStatus($item['product']['category_id']);
+                if($getCategoryStatus==0){
+                    // Product::deleteCartProduct($item['product_id']);
+                    // $message = "One of the product is disabled!Please try another one.";
+                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message',$message);
+                }
+
+            }
 
             // Select Delivery Address
             if (empty($data['address_id'])) {
@@ -515,11 +573,13 @@ class ProductController extends Controller
             }
 
             // dd($total_price);
-            // Calculate shipping price
-            $shipping_price = 0;
+            // Calculate shipping charges
+            $shipping_charges = 0;
+            // Get Shipping Charges
+            $shipping_charges = ShippingCharge::getShippingCharges($total_weight,$deliveryAddress['country']);
 
             // Grand Total
-            $grand_total = $total_price + $shipping_price - Session::get('couponAmount');
+            $grand_total = $total_price + $shipping_charges - Session::get('couponAmount');
 
             // Insert grand total in session variable
             Session::put('grand_total', $grand_total);
@@ -535,7 +595,7 @@ class ProductController extends Controller
             $order->pincode = $deliveryAddress['pincode'];
             $order->mobile = $deliveryAddress['mobile'];
             $order->email = Auth::user()->email;
-            $order->shipping_charges = $shipping_price;
+            $order->shipping_charges = $shipping_charges;
             $order->coupon_code = Session::get('couponCode');
             $order->coupon_amount = Session::get('couponAmount');
             $order->order_status = $order_status;
@@ -561,6 +621,12 @@ class ProductController extends Controller
                 $cartItem->product_price = $getDiscountAttributePrice['final_price'];
                 $cartItem->product_qty = $item['quantity'];
                 $cartItem->save();
+
+                // Reduce stock starts here
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id'],$item['size']);
+                $newStock = $getProductStock - $item['quantity'];
+
+                ProductsAttribute::where(['product_id' => $item['product_id'], 'size' => $item['size']])->update(['stock' => $newStock]);
             }
             // Insert Order Id in session variable
             Session::put('order_id', $order_id);
@@ -590,7 +656,9 @@ class ProductController extends Controller
             }
             return redirect('thanks');
         }
-        return view('front.products.checkout', compact('deliveryAddresses', 'countries', 'getCartItems'));
+
+        // echo $total_price; die;
+        return view('front.products.checkout', compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price'));
     }
 
     public function thanks()
