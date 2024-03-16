@@ -259,7 +259,36 @@
     // Website security
     28.1 Lets prevent order of those products whom status are 0, out of stock,product attribute status 0 or not available or whom products category are disabled.
     28.2 Lets use Session::flush() in userController logout function so that if the user logout then the cart item will be also get remove from the website.
-    28.3 Lets add if condition in addCart function so that if any user add product on 0 quantity it will automatically make quantity to 1;  
+    28.3 Lets add if condition in addCart function so that if any user add product on 0 quantity it will automatically make quantity to 1;
+
+    // Pincode Availability
+    29.1 Lets have two db_table named cod_pincode and prepaid_pincode and add data of all pincode from bangladesh:
+    id,pincode,created_at,updated_at  
+    29.2 Now in checkout function where deliveryAddress and shipping amount are compared there lets compare pincode option from delivery_addresses and (29.1) cod_pincode and count how many pincode is available there,and same in with prepaid_pincode as well ->
+        // COD pincode is available or not
+            $deliveryAddresses[$key]['codpincodeCount'] = DB::table('cod_pincodes')->where('pincode',$value['pincode'])->count();
+        // Prepaid pincode is available or not
+            $deliveryAddresses[$key]['prepaidpincodeCount'] = DB::table('prepaid_pincodes')->where('pincode',$value['pincode'])->count();
+
+    29.3 In checkout blade page from where user will select there delivery address in this input lets have ->
+        codpincodeCount="{{ $address['codpincodeCount'] }}"
+        prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}"
+
+    in cash on delivery and paypal or bkash option lets have two class name.
+    29.4 In custom.js where grand total is calculated there->
+        var codpincodeCount = $(this).attr("codpincodeCount");
+        var prepaidpincodeCount = $(this).attr("prepaidpincodeCount");
+        if (codpincodeCount > 0) {
+            $(".codMethod").show();
+        } else {
+            $(".codMethod").hide();
+        }
+        if (prepaidpincodeCount > 0) {
+            $(".prepaidMethod").show();
+        } else {
+            $(".prepaidMethod").hide();
+        }
+    It means if the pincode user set in his delivey address from if it is match with cash on delivery db_table pincode then user will get the option of cash on delivery other wise user cannot use cash on delivey option.Same check will be happen with prepaidMethod as well.
 
 
 

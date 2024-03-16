@@ -98,11 +98,11 @@ $(document).ready(function () {
     $(document).on("click", ".updateCartItem", function () {
         var quantity = $(this).data("qty");
         var newQty;
-    
+
         if ($(this).hasClass("plus-a")) {
             newQty = parseInt(quantity) + 1;
         }
-    
+
         if ($(this).hasClass("minus-a")) {
             if (quantity <= 1) {
                 alert("Item quantity must be 1 or greater");
@@ -110,9 +110,9 @@ $(document).ready(function () {
             }
             newQty = parseInt(quantity) - 1;
         }
-    
+
         var cartId = $(this).data("cartid");
-    
+
         $.ajax({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -128,11 +128,11 @@ $(document).ready(function () {
                 if (resp.status && resp.quantityChanged) {
                     $(".totalCartItems").html(resp.totalCartItems);
                 }
-    
+
                 if (resp.status == false) {
                     alert(resp.message);
                 }
-    
+
                 $("#appendCartItems").html(resp.view);
                 $("#appendHeaderCartItem").html(resp.headerview);
             },
@@ -141,8 +141,6 @@ $(document).ready(function () {
             },
         });
     });
-
-    
 
     // Delete Cart Items
     $(document).on("click", ".deleteCartItem", function () {
@@ -487,6 +485,18 @@ $(document).ready(function () {
         var total_price = $(this).attr("total_price");
         var coupon_amount = $(this).attr("coupon_amount");
         $(".shipping_charges").html(shipping_charges + "Tk");
+        var codpincodeCount = $(this).attr("codpincodeCount");
+        var prepaidpincodeCount = $(this).attr("prepaidpincodeCount");
+        if (codpincodeCount > 0) {
+            $(".codMethod").show();
+        } else {
+            $(".codMethod").hide();
+        }
+        if (prepaidpincodeCount > 0) {
+            $(".prepaidMethod").show();
+        } else {
+            $(".prepaidMethod").hide();
+        }
         if (coupon_amount == "") {
             coupon_amount = 0;
         }
@@ -497,5 +507,29 @@ $(document).ready(function () {
             parseInt(coupon_amount);
         // alert(grand_total);
         $(".grand_total").html(grand_total + " Tk");
+    });
+
+    // Verify pincode at product details page
+    $("#checkPincode").click(function () {
+        // alert("test");
+        var pincode = $("#pincode").val();
+        if (pincode == "") {
+            alert("Please enter pincode");
+            return false;
+        }
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            data: { pincode: pincode },
+            url: "/check-pincode",
+            success: function (resp) {
+                alert(resp);
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
     });
 });

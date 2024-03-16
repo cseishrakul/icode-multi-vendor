@@ -56,8 +56,10 @@
                                                         <input type="radio" name="address_id"
                                                             id="address{{ $address['id'] }}" value="{{ $address['id'] }}"
                                                             shipping_charges="{{ $address['shipping_charges'] }}"
-                                                            total_price={{ $total_price }}
-                                                            coupon_amount={{ Session::get('couponAmount') }}>
+                                                            total_price="{{ $total_price }}"
+                                                            coupon_amount="{{ Session::get('couponAmount') }}"
+                                                            codpincodeCount="{{ $address['codpincodeCount'] }}"
+                                                            prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}">
                                                     </div>
                                                     &nbsp;&nbsp;
                                                     <div class="mb-3">
@@ -170,7 +172,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div class="u-s-m-b-13">
+                                    <div class="u-s-m-b-13 codMethod">
                                         <input type="radio" class="radio-box" name="payment_gateway" value="COD"
                                             id="cash-on-delivery">
                                         <label class="label-text" for="cash-on-delivery">Cash on Delivery</label>
@@ -180,7 +182,7 @@
                                             id="credit-card-stripe">
                                         <label class="label-text" for="credit-card-stripe">Credit Card (Stripe)</label>
                                     </div> --}}
-                                    <div class="u-s-m-b-13">
+                                    <div class="u-s-m-b-13 prepaidMethod">
                                         <input type="radio" class="radio-box" name="payment_gateway" value="Paypal"
                                             id="paypal">
                                         <label class="label-text" for="paypal">Paypal</label>

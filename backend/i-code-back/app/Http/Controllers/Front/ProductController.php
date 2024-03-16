@@ -216,7 +216,7 @@ class ProductController extends Controller
     {
         if ($request->isMethod('post')) {
             $data = $request->all();
-            if($data['quantity'] <=0){
+            if ($data['quantity'] <= 0) {
                 $data['quantity'] = 1;
             }
             // echo "<pre>"; print_r($data);die; 
@@ -484,8 +484,12 @@ class ProductController extends Controller
         }
         $deliveryAddresses = DeliveryAddress::deliveryAddresses();
         foreach ($deliveryAddresses as $key => $value) {
-            $shippingCharges = ShippingCharge::getShippingCharges($total_weight,$value['country']);
+            $shippingCharges = ShippingCharge::getShippingCharges($total_weight, $value['country']);
             $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
+            // COD pincode is available or not
+            $deliveryAddresses[$key]['codpincodeCount'] = DB::table('cod_pincodes')->where('pincode', $value['pincode'])->count();
+            // Prepaid pincode is available or not
+            $deliveryAddresses[$key]['prepaidpincodeCount'] = DB::table('prepaid_pincodes')->where('pincode', $value['pincode'])->count();
         }
         // dd($deliveryAddresses);
 
@@ -494,42 +498,41 @@ class ProductController extends Controller
             // echo "<pre>";print_r($data);die;
 
             // Website security
-            foreach($getCartItems as $item){
+            foreach ($getCartItems as $item) {
                 // Prevent disabled products to order
                 $product_status = Product::getProductStatus($item['product_id']);
-                if($product_status==0){
+                if ($product_status == 0) {
                     // Product::deleteCartProduct($item['product_id']);
                     // $message = "One of the product is disabled! Please try again";
-                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
-                    return redirect('/cart')->with('error_message',$message);
+                    $message = $item['product']['product_name'] . " with " . $item['size'] . " Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message', $message);
                 }
 
                 // Prevent sold out products to order
-                $getProductStock = ProductsAttribute::getProductStock($item['product_id'],$item['size']);
-                if($getProductStock == 0){
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id'], $item['size']);
+                if ($getProductStock == 0) {
                     // Product::deleteCartProduct($item['product_id']);
                     // $message = "One of the product is sold out! Please try again";
-                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
-                    return redirect('/cart')->with('error_message',$message);
+                    $message = $item['product']['product_name'] . " with " . $item['size'] . " Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message', $message);
                 }
                 // Prevent disabled product attribute to order
-                $getAttributeStatus = ProductsAttribute::getAttibuteStatus($item['product_id'],$item['size']);
-                if($getAttributeStatus == 0){
+                $getAttributeStatus = ProductsAttribute::getAttibuteStatus($item['product_id'], $item['size']);
+                if ($getAttributeStatus == 0) {
                     // Product::deleteCartProduct($item['product_id']);
                     // $message = "One of the product attribute is disabled! Please try again";
-                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
-                    return redirect('/cart')->with('error_message',$message);
+                    $message = $item['product']['product_name'] . " with " . $item['size'] . " Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message', $message);
                 }
 
                 // Prevent disabled categorys products to order
                 $getCategoryStatus = Category::getCategoryStatus($item['product']['category_id']);
-                if($getCategoryStatus==0){
+                if ($getCategoryStatus == 0) {
                     // Product::deleteCartProduct($item['product_id']);
                     // $message = "One of the product is disabled!Please try another one.";
-                    $message = $item['product']['product_name']." with ".$item['size']." Size is not available.Please remove from cart and choose some other product.";
-                    return redirect('/cart')->with('error_message',$message);
+                    $message = $item['product']['product_name'] . " with " . $item['size'] . " Size is not available.Please remove from cart and choose some other product.";
+                    return redirect('/cart')->with('error_message', $message);
                 }
-
             }
 
             // Select Delivery Address
@@ -576,7 +579,7 @@ class ProductController extends Controller
             // Calculate shipping charges
             $shipping_charges = 0;
             // Get Shipping Charges
-            $shipping_charges = ShippingCharge::getShippingCharges($total_weight,$deliveryAddress['country']);
+            $shipping_charges = ShippingCharge::getShippingCharges($total_weight, $deliveryAddress['country']);
 
             // Grand Total
             $grand_total = $total_price + $shipping_charges - Session::get('couponAmount');
@@ -623,7 +626,7 @@ class ProductController extends Controller
                 $cartItem->save();
 
                 // Reduce stock starts here
-                $getProductStock = ProductsAttribute::getProductStock($item['product_id'],$item['size']);
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id'], $item['size']);
                 $newStock = $getProductStock - $item['quantity'];
 
                 ProductsAttribute::where(['product_id' => $item['product_id'], 'size' => $item['size']])->update(['stock' => $newStock]);
@@ -668,6 +671,23 @@ class ProductController extends Controller
             return view('front.products.thanks');
         } else {
             return redirect('cart');
+        }
+    }
+
+    public function checkPincode(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            // cod pincode is available or not
+            $codPincodeCount = DB::table('cod_pincodes')->where('pincode', $data['pincode'])->count();
+            // prepaid pincode is available or not
+            $prepaidPincodeCount = DB::table('prepaid_pincodes')->where('pincode', $data['pincode'])->count();
+
+            if ($codPincodeCount == 0 && $prepaidPincodeCount == 0) {
+                echo "This pincode is not available for delivery";
+            } else {
+                echo "This pincode is available for delivery";
+            }
         }
     }
 }

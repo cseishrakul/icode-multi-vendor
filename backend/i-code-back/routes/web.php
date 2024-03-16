@@ -243,5 +243,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
     // User forgot password
     Route::match(['get', 'post'], 'user/forgot-password', [UserController::class, 'userForgotPassword']);
+
+    // Check Pincode
+    Route::post('check-pincode',[FrontProductController::class,'checkPincode']);
 });
 // End Frontend Route Group

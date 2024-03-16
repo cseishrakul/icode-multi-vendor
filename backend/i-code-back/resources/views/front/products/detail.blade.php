@@ -253,6 +253,14 @@ $productFilters = ProductsFilter::productFilters();
                                 </div>
                             </div>
                         </form>
+                        <br><br>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <b>Delivery</b>
+                                <input type="text" id="pincode" placeholder="Check Pincode" required class="form-control">
+                                <button class="mt-2 button button-outline-secondary w-50" type="button" id="checkPincode">Go</button>
+                            </div>
+                        </div>
                     </div>
                     <!-- Product-details /- -->
                 </div>
