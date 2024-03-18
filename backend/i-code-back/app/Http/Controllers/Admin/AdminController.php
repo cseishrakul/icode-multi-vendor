@@ -305,6 +305,14 @@ class AdminController extends Controller
         $countries = Country::where('status', 1)->get()->toArray();
         return view('admin.settings.vendor.update_vendor_details', compact('slug', 'vendorDetails', 'countries'));
     }
+    // Vendor Commission
+    public function updateVendorCommission(Request $request){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            Vendor::where('id',$data['vendor_id'])->update(['commission'=>$data['commission']]);
+            return redirect()->back()->with("success_message",'Vendor Commission Updated Successfully!');
+        }
+    }
 
 
     // Admins Function
@@ -368,4 +376,5 @@ class AdminController extends Controller
         Auth::guard('admin')->logout();
         return redirect('admin/login');
     }
+
 }

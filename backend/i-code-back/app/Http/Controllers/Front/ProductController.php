@@ -216,6 +216,10 @@ class ProductController extends Controller
     {
         if ($request->isMethod('post')) {
             $data = $request->all();
+
+            // Forget the coupon sessions
+            Session::forget('couponAmount');
+            Session::forget('couponCode');
             if ($data['quantity'] <= 0) {
                 $data['quantity'] = 1;
             }
@@ -270,6 +274,9 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
+             // Forget the coupon sessions
+             Session::forget('couponAmount');
+             Session::forget('couponCode');
             // Get Cart Details
             $cartDetails = Cart::find($data['cartid']);
             // Get Available Product stock
@@ -314,6 +321,7 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
+             // Forget the coupon sessions
             Session::forget('couponAmount');
             Session::forget('couponCode');
             // echo "<pre>";print_r($data);die;

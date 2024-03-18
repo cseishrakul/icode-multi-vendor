@@ -64,7 +64,20 @@ class OrderController extends Controller
 
         // dd($orderLog);
 
-        return view('admin.orders.order_details', compact('orderDetails', 'userDetails', 'orderStatus', 'orderItemStatus', 'orderLog'));
+        // Calculate Total Items in cart
+        $total_items = 0;
+        foreach ($orderDetails['orders_products'] as $product) {
+            $total_items = $total_items + $product['product_qty'];
+        }
+
+        // Calculate item discount
+        if ($orderDetails['coupon_amount'] > 0) {
+            $item_discount = round($orderDetails['coupon_amount'] / $total_items, 2);
+        } else {
+            $item_discount = 0;
+        }
+
+        return view('admin.orders.order_details', compact('orderDetails', 'userDetails', 'orderStatus', 'orderItemStatus', 'orderLog','item_discount'));
     }
 
     public function updateOrderStatus(Request $request)
@@ -171,8 +184,8 @@ class OrderController extends Controller
         $userDetails = User::where('id', $orderDetails['user_id'])->first()->toArray();
         // dd($userDetails);
         // instantiate and use the dompdf class
-        $invoiceHTML = view('pdf.invoice',compact('orderDetails','userDetails'));
-        
+        $invoiceHTML = view('pdf.invoice', compact('orderDetails', 'userDetails'));
+
         $dompdf = new Dompdf();
         $dompdf->loadHtml($invoiceHTML);
 

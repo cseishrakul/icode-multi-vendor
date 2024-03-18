@@ -68,6 +68,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // View vendor details
         Route::get('view-vendor-details/{id}', [AdminController::class, 'viewVendorDetails']);
+         // Vendor Commission
+         Route::post('update-vendor-commission',[AdminController::class,'updateVendorCommission']);
 
         // Updata admin status
         Route::post('update-admin-status', [AdminController::class, 'updateAdminStatus']);

@@ -291,6 +291,18 @@
     It means if the pincode user set in his delivey address from if it is match with cash on delivery db_table pincode then user will get the option of cash on delivery other wise user cannot use cash on delivey option.Same check will be happen with prepaidMethod as well.
 
 
+    // Vendor Commission
+    30. Lets add commission field in vendor db_table after confirm field and type will be float.
+    30.1 Lets have an input form field in vendor details page inside admin panel so that admin can update commission percentage from there.
+    30.2 Lets create a function in vendor model so that we can fetch commission percentage of very vendor->
+        public static function getVendorCommission($vendorid){
+            $getVendorCommission = Vendor::select('commission')->where('id',$vendorid)->first()->toArray();
+            return $getVendorCommission['commission'];
+        }
+
+    30.3 Lets use this function in admin/order-details page so that vendor will get the updated news about how much commission he'll have to pay for this particular order and what will be his final amount from this order.But This commission amount and final amount will only see by vendor.Admin is not gonna have access to see this.For this lets use condition in order-details page.
+    30.4 Lets add commission system in coupon discounted product.For that lets fetch total orders item and products quantity.Then lets find out is there any coupon_amount or not.If yes minus the coupon_amount from original price.And then the price will be show in vendor/admin order list.
+    30.5 when we add a product in cart then apply coupon ...after applying coupon if we add more product in cart still the coupon remains there..so we have to session out of couponAmount and couponCode in front/productController inside update,delete,add cart function.
 
 // Twilio
     4Q53ZP8TDRT2BC11MPD23JY9
