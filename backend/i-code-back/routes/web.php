@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\ShippingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Front\AddressController;
+use App\Http\Controllers\Front\CmsController as FrontCmsController;
 use App\Http\Controllers\Front\IndexController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\PaypalController;
@@ -248,5 +249,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
     // Check Pincode
     Route::post('check-pincode',[FrontProductController::class,'checkPincode']);
+
+    // Contact us 
+    Route::match(['get','post'],'contact',[FrontCmsController::class,'contact']);
 });
 // End Frontend Route Group

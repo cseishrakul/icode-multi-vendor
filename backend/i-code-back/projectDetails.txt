@@ -304,5 +304,23 @@
     30.4 Lets add commission system in coupon discounted product.For that lets fetch total orders item and products quantity.Then lets find out is there any coupon_amount or not.If yes minus the coupon_amount from original price.And then the price will be show in vendor/admin order list.
     30.5 when we add a product in cart then apply coupon ...after applying coupon if we add more product in cart still the coupon remains there..so we have to session out of couponAmount and couponCode in front/productController inside update,delete,add cart function.
 
+    // Contact page
+    31. Lets create contact us page in frontend.And from there lets send email to admin from users about there queiry.
+    31.1 Lets validate contact us from as well;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Twilio
     4Q53ZP8TDRT2BC11MPD23JY9
