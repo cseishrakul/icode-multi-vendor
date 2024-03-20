@@ -308,6 +308,9 @@
     31. Lets create contact us page in frontend.And from there lets send email to admin from users about there queiry.
     31.1 Lets validate contact us from as well;
 
+    // SEO 
+    32. Lets use dynamic title on website everypage with the help of meta-title,description,keywords. 
+
 
 
 

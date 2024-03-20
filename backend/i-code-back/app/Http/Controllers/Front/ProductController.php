@@ -107,37 +107,73 @@ class ProductController extends Controller
 
                 $categoryProducts = $categoryProducts->paginate(30);
                 // dd($categoryDetails);
-                return view('front.products.ajax_products_listing', compact('categoryDetails', 'categoryProducts', 'url'));
+                // echo "<pre>";print_r($categoryDetails);die;
+                $meta_title = $categoryDetails['categoryDetails']['meta_title'];
+                $meta_keywords = $categoryDetails['categoryDetails']['meta_keywords'];
+                $meta_description = $categoryDetails['categoryDetails']['meta_description'];
+
+                return view('front.products.ajax_products_listing', compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_keywords', 'meta_description'));
             } else {
                 abort(404);
             }
         } else {
-            $url = Route::getFacadeRoot()->current()->uri();
-            $categoryCount = Category::where(['url' => $url, 'status' => 1])->count();
-            if ($categoryCount > 0) {
-                $categoryDetails = Category::categoryDetails($url);
-                $categoryProducts = Product::with('brand')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
-
-                // Checking the sort
-                if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-                    if ($_GET['sort'] == 'product_latest') {
-                        $categoryProducts->orderby('products.id', 'Desc');
-                    } else if ($_GET['sort'] == 'price_lowest') {
-                        $categoryProducts->orderby('products.product_price', 'Asc');
-                    } else if ($_GET['sort'] == 'price_highest') {
-                        $categoryProducts->orderby('products.product_price', 'Desc');
-                    } else if ($_GET['sort'] == 'name_z_a') {
-                        $categoryProducts->orderby('products.product_name', 'Desc');
-                    } else if ($_GET['sort'] == 'name_a_z') {
-                        $categoryProducts->orderby('products.product_name', 'Asc');
-                    }
+            if (isset($_REQUEST['search']) && !empty($_REQUEST['search'])) {
+                if ($_REQUEST['search'] == 'new-arrivals') {
+                    $search_product = $_REQUEST['search'];
+                    $categoryDetails['breadcrumbs'] = 'New Arrivals';
+                    $categoryDetails['categoryDetails']['category_name'] = 'New Arrivals';
+                    $categoryDetails['categoryDetails']['description'] = "New Arrival Products";
+                    $categoryProducts = Product::select('product_id', 'products.section_id', 'products.product_name', 'products.product_code', 'products.product_color', 'products.product_price', 'products.product_description', 'products.product_discount', 'products.product_image')->with('brand')->join('categories', 'categories.id', '=', 'category_id')->where('products.status', 1)->orderBy('id','Desc');
+                } else {
+                    $search_product = $_REQUEST['seach'];
+                    $categoryDetails['breadcrumbs'] = $search_product;
+                    $categoryDetails['categoryDetails']['category_name'] = $search_product;
+                    $categoryDetails['categoryDetails']['description'] = "Search Product for" . $search_product;
+                    $categoryProducts = Product::select('product_id', 'products.section_id', 'products.product_name', 'products.product_code', 'products.product_color', 'products.product_price', 'products.product_description', 'products.product_discount', 'products.product_image')->with('brand')->join('categories', 'categories.id', '=', 'category_id')->where(function ($query) use ($search_product) {
+                        $query->where("products.porduct_name", 'like', '%' . $search_product . '%')
+                            ->orWhere("products.product_code", 'like', '%' . $search_product . '%')
+                            ->orWhere("products.product_color", 'like', '%' . $search_product . '%')
+                            ->orWhere("products.description", 'like', '%' . $search_product . '%')
+                            ->orWhere("categories.category_name", 'like', '%' . $search_product . '%');
+                    })->where('products.status', 1);
                 }
-
-                $categoryProducts = $categoryProducts->paginate(30);
-                // dd($categoryDetails);
-                return view('front.products.listing', compact('categoryDetails', 'categoryProducts', 'url'));
+                if (isset($_REQUEST['section_id']) && !empty($_REQUEST['section_id'])) {
+                    $categoryProducts = $categoryProducts->where('products.section_id', $_REQUEST['section_id']);
+                }
+                $categoryProducts = $categoryProducts->get();
+                return view("front.products.listing", compact('categoryDetails', 'categoryProducts'));
             } else {
-                abort(404);
+                $url = Route::getFacadeRoot()->current()->uri();
+                $categoryCount = Category::where(['url' => $url, 'status' => 1])->count();
+                if ($categoryCount > 0) {
+
+                    $categoryDetails = Category::categoryDetails($url);
+                    $categoryProducts = Product::with('brand')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1);
+
+                    // Checking the sort
+                    if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+                        if ($_GET['sort'] == 'product_latest') {
+                            $categoryProducts->orderby('products.id', 'Desc');
+                        } else if ($_GET['sort'] == 'price_lowest') {
+                            $categoryProducts->orderby('products.product_price', 'Asc');
+                        } else if ($_GET['sort'] == 'price_highest') {
+                            $categoryProducts->orderby('products.product_price', 'Desc');
+                        } else if ($_GET['sort'] == 'name_z_a') {
+                            $categoryProducts->orderby('products.product_name', 'Desc');
+                        } else if ($_GET['sort'] == 'name_a_z') {
+                            $categoryProducts->orderby('products.product_name', 'Asc');
+                        }
+                    }
+
+                    $categoryProducts = $categoryProducts->paginate(30);
+                    // dd($categoryDetails);
+                    $meta_title = $categoryDetails['categoryDetails']['meta_title'];
+                    $meta_keywords = $categoryDetails['categoryDetails']['meta_keywords'];
+                    $meta_description = $categoryDetails['categoryDetails']['meta_description'];
+                    return view('front.products.listing', compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_keywords', 'meta_description'));
+                } else {
+                    abort(404);
+                }
             }
         }
     }
@@ -185,7 +221,10 @@ class ProductController extends Controller
 
         $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
         // dd($recentlyProducts);
-        return view('front.products.detail', compact('productDetails', 'categoryDetails', 'totalStock', 'similarProduct', 'recentlyProducts', 'groupProducts'));
+        $meta_title = $productDetails['meta_title'];
+        $meta_description = $productDetails['meta_description'];
+        $meta_keywords = $productDetails['meta_keywords'];
+        return view('front.products.detail', compact('productDetails', 'categoryDetails', 'totalStock', 'similarProduct', 'recentlyProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords'));
     }
 
     public function getProductPrice(Request $request)
@@ -267,16 +306,18 @@ class ProductController extends Controller
     {
         $getCartItems = Cart::getCartItems();
         // dd($getCartItems);
-        return view('front.products.cart', compact('getCartItems'));
+        $meta_title = "Shopping-cart Multi Commerce";
+        $meta_keywords = 'shopping cart, Multi Commerce';
+        return view('front.products.cart', compact('getCartItems', 'meta_title', 'meta_keywords'));
     }
 
     public function cartUpdate(Request $request)
     {
         if ($request->ajax()) {
             $data = $request->all();
-             // Forget the coupon sessions
-             Session::forget('couponAmount');
-             Session::forget('couponCode');
+            // Forget the coupon sessions
+            Session::forget('couponAmount');
+            Session::forget('couponCode');
             // Get Cart Details
             $cartDetails = Cart::find($data['cartid']);
             // Get Available Product stock
@@ -321,7 +362,7 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-             // Forget the coupon sessions
+            // Forget the coupon sessions
             Session::forget('couponAmount');
             Session::forget('couponCode');
             // echo "<pre>";print_r($data);die;
