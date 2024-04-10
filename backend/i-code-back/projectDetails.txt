@@ -311,6 +311,15 @@
     // SEO 
     32. Lets use dynamic title on website everypage with the help of meta-title,description,keywords. 
 
+    33. Lets update header footer of frontend and lets update admin panel sidebar and dashboard;
+
+    // Newsletter
+
+    34. Lets create Newsletter subscriber db_table model and lets have some dummy data on it
+    34.1 Lets have Newsletter controller in admin controller and from there lets show subscriber list in admin panel.
+    34.1.2 Lets update status from there and lets have option of delete subscriber from this table as well.
+    34.2 Lets add a option in frontend so that user can subscriber with there valid email id.for that lets have controller of Newsletter in front and lets add users email with a input form and via ajax.
+
 
 
 

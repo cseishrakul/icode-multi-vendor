@@ -51,16 +51,16 @@ if (Auth::check()) {
                                         <i class="fas fa-cog u-s-m-r-9"></i>
                                         My Cart</a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a href="wishlist.html">
                                         <i class="far fa-heart u-s-m-r-9"></i>
                                         My Wishlist</a>
-                                </li>
-                                {{-- <li>
-                                <a href="checkout.html">
+                                </li> --}}
+                                <li>
+                                <a href="{{url('checkout')}}">
                                     <i class="far fa-check-circle u-s-m-r-9"></i>
                                     Checkout</a>
-                            </li> --}}
+                            </li>
                                 <li>
                                     <a href="{{ url('user/orders') }}">
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
@@ -156,20 +156,20 @@ if (Auth::check()) {
                     <nav>
                         <ul class="mid-nav g-nav">
                             <li class="u-d-none-lg">
-                                <a href="index.html">
+                                <a href="{{url('/')}}">
                                     <i class="ion ion-md-home u-c-brand"></i>
                                 </a>
                             </li>
-                            <li class="u-d-none-lg">
+                            {{-- <li class="u-d-none-lg">
                                 <a href="wishlist.html">
                                     <i class="far fa-heart"></i>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li>
                                 <a id="mini-cart-trigger">
                                     <i class="ion ion-md-basket"></i>
                                     <span class="item-counter totalCartItems"> {{ $cartItem }} </span>
-                                    <span class="item-price"> 220.00 Tk </span>
+                                    {{-- <span class="item-price"> 220.00 Tk </span> --}}
                                 </a>
                             </li>
                         </ul>
@@ -184,12 +184,12 @@ if (Auth::check()) {
         <div class="fixed-responsive-wrapper">
             <button type="button" class="button fas fa-search" id="responsive-search"></button>
         </div>
-        <div class="fixed-responsive-wrapper">
+        {{-- <div class="fixed-responsive-wrapper">
             <a href="wishlist.html">
                 <i class="far fa-heart"></i>
                 <span class="fixed-item-counter">4</span>
             </a>
-        </div>
+        </div> --}}
     </div>
     <!-- Responsive-Buttons /- -->
     <!-- Mini Cart -->
@@ -248,12 +248,12 @@ if (Auth::check()) {
                                         @endif
                                     @endforeach
 
-                                    <li>
+                                    {{-- <li>
                                         <a class="v-more">
                                             <i class="ion ion-md-add"></i>
                                             <span>View More</span>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </div>
                         </nav>
@@ -291,7 +291,7 @@ if (Auth::check()) {
                                         <a href="about.html" class="u-c-brand">About Us</a>
                                     </li>
                                     <li>
-                                        <a href="contact.html">Contact Us</a>
+                                        <a href="{{url('contact')}}">Contact Us</a>
                                     </li>
                                     <li>
                                         <a href="faq.html">FAQ</a>
@@ -300,25 +300,25 @@ if (Auth::check()) {
                                 <ul>
                                     <li class="menu-title">COLLECTION</li>
                                     <li>
-                                        <a href="cart.html">Men Clothing</a>
+                                        <a href="{{url('men')}}">Men Clothing</a>
                                     </li>
                                     <li>
-                                        <a href="checkout.html">Women Clothing</a>
+                                        <a href="{{url('women')}}">Women Clothing</a>
                                     </li>
                                     <li>
-                                        <a href="account.html">Kids Clothing</a>
+                                        <a href="{{url('men')}}">Kids Clothing</a>
                                     </li>
                                 </ul>
                                 <ul>
                                     <li class="menu-title">ACCOUNT</li>
                                     <li>
-                                        <a href="shop-v1-root-category.html">My Account</a>
+                                        <a href="{{url('user/account')}}">My Account</a>
                                     </li>
-                                    <li>
+                                    {{-- <li>
                                         <a href="shop-v1-root-category.html">My Profile</a>
-                                    </li>
+                                    </li> --}}
                                     <li>
-                                        <a href="listing.html">My Orders</a>
+                                        <a href="{{url('user/orders')}}">My Orders</a>
                                     </li>
 
                                 </ul>

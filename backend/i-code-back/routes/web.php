@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FilterController;
+use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SectionController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Front\AddressController;
 use App\Http\Controllers\Front\CmsController as FrontCmsController;
 use App\Http\Controllers\Front\IndexController;
+use App\Http\Controllers\Front\NewletterController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\PaypalController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
@@ -69,8 +71,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // View vendor details
         Route::get('view-vendor-details/{id}', [AdminController::class, 'viewVendorDetails']);
-         // Vendor Commission
-         Route::post('update-vendor-commission',[AdminController::class,'updateVendorCommission']);
+        // Vendor Commission
+        Route::post('update-vendor-commission', [AdminController::class, 'updateVendorCommission']);
 
         // Updata admin status
         Route::post('update-admin-status', [AdminController::class, 'updateAdminStatus']);
@@ -159,6 +161,11 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get("shipping-charges", [ShippingController::class, 'shippingCharges']);
         Route::post('update-shipping-status', [ShippingController::class, 'updateShippingStatus']);
         Route::match(['get', 'post'], 'edit-shipping-charge/{id}', [ShippingController::class, 'editShippingCharges']);
+
+        // Newsletter
+        Route::get('subscribers', [NewsletterController::class, 'subscribers']);
+        Route::post('update-subscriber-status', [NewsletterController::class, 'updateSubscriberStatus']);
+        Route::get('delete-subscriber/{id}',[NewsletterController::class,'deleteSubscriber']);
     });
 });
 // End Admin Route Group
@@ -248,9 +255,12 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::match(['get', 'post'], 'user/forgot-password', [UserController::class, 'userForgotPassword']);
 
     // Check Pincode
-    Route::post('check-pincode',[FrontProductController::class,'checkPincode']);
+    Route::post('check-pincode', [FrontProductController::class, 'checkPincode']);
 
     // Contact us 
-    Route::match(['get','post'],'contact',[FrontCmsController::class,'contact']);
+    Route::match(['get', 'post'], 'contact', [FrontCmsController::class, 'contact']);
+
+    // Subscribers
+    Route::post('add-subscriber-email',[NewletterController::class,'addSubscriber']);
 });
 // End Frontend Route Group

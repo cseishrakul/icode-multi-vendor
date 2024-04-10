@@ -7,7 +7,14 @@ use Illuminate\Http\Request;
 use Auth;
 use Hash;
 use App\Models\Admin;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Country;
+use App\Models\Coupon;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Section;
+use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorsBankDetail;
 use App\Models\VendorsBusinessDetail;
@@ -57,7 +64,15 @@ class AdminController extends Controller
     public function dashboard()
     {
         Session::put('page', 'dashboard');
-        return view('admin.dashboard');
+        $sectionsCount = Section::count();
+        $categoriesCount = Category::count();
+        $productsCount = Product::count();
+        $ordersCount = Order::count();
+        $couponsCount = Coupon::count();
+        $brandsCount = Brand::count();
+        $vendorsCount = Vendor::count();
+        $usersCount = User::count();
+        return view('admin.dashboard', compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'brandsCount', 'vendorsCount','usersCount'));
     }
 
     // Update Admin Password
@@ -306,11 +321,12 @@ class AdminController extends Controller
         return view('admin.settings.vendor.update_vendor_details', compact('slug', 'vendorDetails', 'countries'));
     }
     // Vendor Commission
-    public function updateVendorCommission(Request $request){
-        if($request->isMethod('post')){
+    public function updateVendorCommission(Request $request)
+    {
+        if ($request->isMethod('post')) {
             $data = $request->all();
-            Vendor::where('id',$data['vendor_id'])->update(['commission'=>$data['commission']]);
-            return redirect()->back()->with("success_message",'Vendor Commission Updated Successfully!');
+            Vendor::where('id', $data['vendor_id'])->update(['commission' => $data['commission']]);
+            return redirect()->back()->with("success_message", 'Vendor Commission Updated Successfully!');
         }
     }
 
@@ -353,7 +369,7 @@ class AdminController extends Controller
             Admin::where('id', $data['admin_id'])->update(['status' => $status]);
             $adminDetails = Admin::where('id', $data['admin_id'])->first()->toArray();
             if ($adminDetails['type'] == 'vendor' && $status == 1) {
-                Vendor::where('id',$adminDetails['vendor_id'])->update(['status' => $status]);
+                Vendor::where('id', $adminDetails['vendor_id'])->update(['status' => $status]);
                 // send approval email
                 $email = $adminDetails['email'];
                 $messageData = [
@@ -376,5 +392,4 @@ class AdminController extends Controller
         Auth::guard('admin')->logout();
         return redirect('admin/login');
     }
-
 }

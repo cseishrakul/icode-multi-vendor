@@ -14,6 +14,7 @@ $(document).ready(function () {
     $("#users").DataTable();
     $("#orders").DataTable();
     $("#shipping").DataTable();
+    $("#subscribers").DataTable();
     $("#current_password").keyup(function () {
         var current_password = $("#current_password").val();
         // alert(current_password);
@@ -415,6 +416,35 @@ $(document).ready(function () {
                     );
                 } else if (resp["status"] == 1) {
                     $("#shipping-" + shipping_id).html(
+                        "<i class='mdi mdi-bookmark-check' style='font-size: 25px;'status='Active'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+    // Update Subscriber Status
+    $(document).on("click", ".updateSubscriberStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var subscriber_id = $(this).attr("subscriber_id");
+        // alert(admin_id);
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-subscriber-status",
+            data: { status: status, subscriber_id: subscriber_id },
+            success: function (resp) {
+                // alert(resp);
+                if (resp["status"] == 0) {
+                    $("#subscriber-" + subscriber_id).html(
+                        "<i class='mdi mdi-bookmark-outline' style='font-size: 25px;'status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#subscriber-" + subscriber_id).html(
                         "<i class='mdi mdi-bookmark-check' style='font-size: 25px;'status='Active'></i>"
                     );
                 }

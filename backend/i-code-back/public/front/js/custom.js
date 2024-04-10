@@ -533,3 +533,35 @@ $(document).ready(function () {
         });
     });
 });
+
+function addSubscriber() {
+    // alert("OKay");
+    var subscriber_email = $("#subscriber_email").val();
+    // alert(subscriber_email);
+    var mailFormat = /\S+@\S+\.\S+/;
+    if (subscriber_email.match(mailFormat)) {
+    } else {
+        alert("Please enter valid email!");
+        return false;
+    }
+    $.ajax({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        type: "post",
+        url: "add-subscriber-email",
+        data: { subscriber_email: subscriber_email },
+        success: function (resp) {
+            if (resp == "Exists") {
+                alert(
+                    "Your email is already exists for newsletter subscription"
+                );
+            } else if (resp == "Saved") {
+                alert("Thanks for subscribing");
+            }
+        },
+        error: function () {
+            alert("Error");
+        },
+    });
+}

@@ -459,8 +459,8 @@
                 </p>
                 <form class="newsletter-form">
                     <label class="sr-only" for="newsletter-field">Enter your Email</label>
-                    <input type="text" id="newsletter-field" placeholder="Your Email Address">
-                    <button type="submit" class="button">SUBMIT</button>
+                    <input type="text" placeholder="Your Email Address" name="subscriber_email" id="subscriber_email" required>
+                    <button type="button" onclick="addSubscriber()" class="button">SUBMIT</button>
                 </form>
             </div>
             <!-- Outer-Footer /- -->
@@ -475,7 +475,7 @@
                                     <a href="about.html">About Us</a>
                                 </li>
                                 <li>
-                                    <a href="contact.html">Contact Us</a>
+                                    <a href="{{url('contact')}}">Contact Us</a>
                                 </li>
                                 <li>
                                     <a href="faq.html">FAQ</a>
@@ -488,10 +488,10 @@
                             <h6>COLLECTION</h6>
                             <ul>
                                 <li>
-                                    <a href="cart.html">Men Clothing</a>
+                                    <a href="{{url('men')}}">Men Clothing</a>
                                 </li>
                                 <li>
-                                    <a href="checkout.html">Women Clothing</a>
+                                    <a href="{{url('women')}}">Women Clothing</a>
                                 </li>
                                 <li>
                                     <a href="account.html">Kids Clothing</a>
@@ -504,13 +504,13 @@
                             <h6>ACCOUNT</h6>
                             <ul>
                                 <li>
-                                    <a href="shop-v1-root-category.html">My Account</a>
+                                    <a href="{{url('user/account')}}">My Account</a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a href="shop-v1-root-category.html">My Profile</a>
-                                </li>
+                                </li> --}}
                                 <li>
-                                    <a href="listing.html">My Orders</a>
+                                    <a href="{{url('user/orders')}}">My Orders</a>
                                 </li>
                             </ul>
                         </div>
