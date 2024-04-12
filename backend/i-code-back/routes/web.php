@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\FilterController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\ShippingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Front\NewletterController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\PaypalController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
+use App\Http\Controllers\Front\RatingController as FrontRatingController;
 use App\Http\Controllers\Front\UserController;
 use App\Http\Controllers\Front\VendorController;
 use App\Models\Category;
@@ -165,7 +167,13 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         // Newsletter
         Route::get('subscribers', [NewsletterController::class, 'subscribers']);
         Route::post('update-subscriber-status', [NewsletterController::class, 'updateSubscriberStatus']);
-        Route::get('delete-subscriber/{id}',[NewsletterController::class,'deleteSubscriber']);
+        Route::get('delete-subscriber/{id}', [NewsletterController::class, 'deleteSubscriber']);
+        Route::get('export-subscribers', [NewsletterController::class, 'exportSubscribers']);
+
+        // Rating
+        Route::get('ratings', [RatingController::class, 'ratings']);
+        Route::post('update-rating-status', [RatingController::class, 'updateRatingStatus']);
+        Route::get('delete-rating/{id}', [RatingController::class, 'deleteRating']);
     });
 });
 // End Admin Route Group
@@ -261,6 +269,9 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::match(['get', 'post'], 'contact', [FrontCmsController::class, 'contact']);
 
     // Subscribers
-    Route::post('add-subscriber-email',[NewletterController::class,'addSubscriber']);
+    Route::post('add-subscriber-email', [NewletterController::class, 'addSubscriber']);
+
+    // Rating
+    Route::post("add-rating",[FrontRatingController::class,'addRating']);
 });
 // End Frontend Route Group

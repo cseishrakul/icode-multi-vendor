@@ -104,7 +104,7 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/users') }}">Users</a></li>
                         <li class="nav-item"> <a class="nav-link"
-                                href="{{ url('admin/subscribers') }}">Subcribers</a>
+                              href="{{ url('admin/subscribers') }}">Subcribers</a>
                         </li>
                     </ul>
                 </div>
@@ -172,6 +172,19 @@
                 <div class="collapse" id="ui-basic8">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/shipping-charges') }}">Shipping Charges</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#ui-basic9" aria-expanded="false"
+                    aria-controls="ui-basic9">
+                    <i class="icon-layout menu-icon"></i>
+                    <span class="menu-title">Ratings Management</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="ui-basic9">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ratings') }}">Ratings</a></li>
                     </ul>
                 </div>
             </li>

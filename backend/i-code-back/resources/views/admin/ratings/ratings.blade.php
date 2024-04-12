@@ -9,7 +9,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h4 class="card-title">Subscribers</h4>
+                                    <h4 class="card-title">Ratings</h4>
 
                                 </div>
                             </div>
@@ -23,21 +23,23 @@
                                         </button>
                                     </div>
                                 @endif
-                                <a href="{{url('admin/export-subscribers')}}" class="btn btn-info mx-2" style="float:right">Export</a>
-                                <table class="table table-bordered table-striped" id="subscribers"">
+                                <table class="table table-bordered table-striped" id="rating">
                                     <thead class="">
                                         <tr>
                                             <th>
                                                 ID
                                             </th>
                                             <th>
-                                                Email
+                                                Product Name
                                             </th>
                                             <th>
-                                                Subscribed on
+                                                User Email
                                             </th>
                                             <th>
-                                                Status
+                                                Review
+                                            </th>
+                                            <th>
+                                                Rating
                                             </th>
                                             <th>
                                                 Action
@@ -45,37 +47,40 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($subscribers as $subscriber)
+                                        @foreach ($ratings as $rating)
                                             <tr>
                                                 <td>
-                                                    {{ $subscriber['id'] }}
+                                                    {{ $rating['id'] }}
                                                 </td>
                                                 <td>
-                                                    {{ $subscriber['email'] }}
+                                                    <a href="{{ url('product/' . $rating['product']['id']) }}" target="_blank">{{ $rating['product']['product_name'] }}
+                                                    </a>
                                                 </td>
                                                 <td>
-                                                    {{ date('F j,Y,g:i a', strtotime($subscriber['created_at'])) }}
+                                                    {{ $rating['user']['email'] }}
                                                 </td>
                                                 <td>
-                                                    @if ($subscriber['status'] == '1')
-                                                        <a href="javascript:void(0)" class="updateSubscriberStatus"
-                                                            id="subscriber-{{ $subscriber['id'] }}"
-                                                            subscriber_id="{{ $subscriber['id'] }}">
+                                                    {{ $rating['review'] }}
+                                                </td>
+                                                <td>
+                                                    {{ $rating['rating'] }}
+                                                </td>
+                                                <td>
+                                                    @if ($rating['status'] == '1')
+                                                        <a href="javascript:void(0)" class="updateRatingStatus"
+                                                            id="rating-{{ $rating['id'] }}" rating_id="{{ $rating['id'] }}">
                                                             <i class="mdi mdi-bookmark-check" style="font-size: 25px;"
                                                                 status="Active"></i>
                                                         </a>
-                                                    @elseif($subscriber['status'] == '0')
-                                                        <a href="javascript:void(0)" class="updateSubscriberStatus"
-                                                            id="subscriber-{{ $subscriber['id'] }}"
-                                                            subscriber_id="{{ $subscriber['id'] }}">
+                                                    @elseif($rating['status'] == '0')
+                                                        <a href="javascript:void(0)" class="updateRatingStatus"
+                                                            rating-{{ $rating['id'] }}" rating_id="{{ $rating['id'] }}">
                                                             <i class="mdi mdi-bookmark-outline" style="font-size: 25px;"
                                                                 status="Inactive"></i>
                                                         </a>
                                                     @endif
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:void(0)" class="confirmDelete" module="subscriber"
-                                                        moduleid="{{ $subscriber['id'] }}">
+                                                    <a href="javascript:void(0)" class="confirmDelete" module="rating"
+                                                        moduleid="{{ $rating['id'] }}">
                                                         <i class="mdi mdi-file-excel-box" style="font-size: 25px;"></i>
                                                     </a>
 

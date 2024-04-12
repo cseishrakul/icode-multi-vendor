@@ -14,6 +14,7 @@ use App\Models\OrdersProduct;
 use App\Models\Product;
 use App\Models\ProductsAttribute;
 use App\Models\ProductsFilter;
+use App\Models\Rating;
 use App\Models\ShippingCharge;
 use App\Models\User;
 use App\Models\Vendor;
@@ -219,12 +220,33 @@ class ProductController extends Controller
 
         // dd($groupProducts);
 
+        // Get all product ratings
+        $ratings = Rating::with('user')->where(['product_id'=>$id,'status'=>1])->get()->toArray();
+        // dd($ratings);
+
+        // Get average rating of product
+        $ratingSum = Rating::where(['product_id' => $id,'status' => 1])->sum('rating');
+        $ratingCount = Rating::where(['product_id' => $id,'status' => 1])->count();
+
+        if($ratingCount > 0){
+            $avgRating = round($ratingSum/$ratingCount,2);
+            $avgStarRating = round($ratingSum/$ratingCount);
+        }
+
+        // Get star rating
+        $ratingOneStarCount = Rating::where(['product_id' => $id,'status' => 1,'rating'=>1])->count();
+        $ratingTwoStarCount = Rating::where(['product_id' => $id,'status' => 1,'rating'=>2])->count();
+        $ratingThreeStarCount = Rating::where(['product_id' => $id,'status' => 1,'rating'=>3])->count();
+        $ratingFourStarCount = Rating::where(['product_id' => $id,'status' => 1,'rating'=>4])->count();
+        $ratingFiveStarCount = Rating::where(['product_id' => $id,'status' => 1,'rating'=>5])->count();
+
+
         $totalStock = ProductsAttribute::where('product_id', $id)->sum('stock');
         // dd($recentlyProducts);
         $meta_title = $productDetails['meta_title'];
         $meta_description = $productDetails['meta_description'];
         $meta_keywords = $productDetails['meta_keywords'];
-        return view('front.products.detail', compact('productDetails', 'categoryDetails', 'totalStock', 'similarProduct', 'recentlyProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords'));
+        return view('front.products.detail', compact('productDetails', 'categoryDetails', 'totalStock', 'similarProduct', 'recentlyProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords','ratings','avgRating','avgStarRating','ratingOneStarCount','ratingTwoStarCount','ratingThreeStarCount','ratingFourStarCount','ratingFiveStarCount'));
     }
 
     public function getProductPrice(Request $request)
@@ -663,6 +685,7 @@ class ProductController extends Controller
                 $cartItem = new OrdersProduct;
                 $cartItem->order_id = $order_id;
                 $cartItem->user_id = Auth::user()->id;
+
                 $cartItem->admin_id = $getProductDetails['admin_id'];
                 $cartItem->vendor_id = $getProductDetails['vendor_id'];
                 $cartItem->product_id = $item['product_id'];
@@ -671,6 +694,15 @@ class ProductController extends Controller
                 $cartItem->product_color = $getProductDetails['product_color'];
                 $cartItem->product_size = $item['size'];
                 $cartItem->product_price = $getDiscountAttributePrice['final_price'];
+
+                $getProductStock = ProductsAttribute::getProductStock($item['product_id'],$item['size']);
+
+                if($item['quantity']> $getProductStock){
+                    $message = $getProductDetails['product_name']." with ".$item['size']." Quantity is not available.Please reduce its quantity and try again.";
+
+                    return redirect('/cart')->with('error_message',$message);
+                }
+
                 $cartItem->product_qty = $item['quantity'];
                 $cartItem->save();
 

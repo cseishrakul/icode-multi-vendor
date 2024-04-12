@@ -23,18 +23,22 @@ class ProductController extends Controller
         $adminType = Auth::guard('admin')->user()->type;
         $vendor_id = Auth::guard('admin')->user()->vendor_id;
 
-        if($adminType =='vendor'){
+        if ($adminType == 'vendor') {
             $vendorStatus = Auth::guard('admin')->user()->status;
-            if($vendorStatus == 0){
-                return redirect('admin/update-vendor-details/personal')->with('error_message','Your vendor account is not approved yet. Please make sure to fill your valid personal,business and bank details.');
+            if ($vendorStatus == 0) {
+                return redirect('admin/update-vendor-details/personal')->with('error_message', 'Your vendor account is not approved yet. Please make sure to fill your valid personal,business and bank details.');
             }
         }
-        $products = Product::with(['section'=>function($query){$query->select('id','name');}, 'category' => function($query){$query->select('id','category_name');}]);
-        
-        if($adminType == 'vendor'){
-            $products = $products->where('vendor_id',$vendor_id);
+        $products = Product::with(['section' => function ($query) {
+            $query->select('id', 'name');
+        }, 'category' => function ($query) {
+            $query->select('id', 'category_name');
+        }]);
+
+        if ($adminType == 'vendor') {
+            $products = $products->where('vendor_id', $vendor_id);
         }
-        
+
         $products = $products->get()->toArray();
         // dd($products);
         return view('admin.products.products', compact('products'));
@@ -153,17 +157,18 @@ class ProductController extends Controller
                     }
                 }
             }
+            if ($id == "") {
+                $adminType = Auth::guard('admin')->user()->type;
+                $vendor_id = Auth::guard('admin')->user()->vendor_id;
+                $admin_id = Auth::guard('admin')->user()->id;
 
-            $adminType = Auth::guard('admin')->user()->type;
-            $vendor_id = Auth::guard('admin')->user()->vendor_id;
-            $admin_id = Auth::guard('admin')->user()->id;
-
-            $product->admin_type = $adminType;
-            $product->admin_id = $admin_id;
-            if ($adminType == 'vendor') {
-                $product->vendor_id = $vendor_id;
-            } else {
-                $product->vendor_id = 0;
+                $product->admin_type = $adminType;
+                $product->admin_id = $admin_id;
+                if ($adminType == 'vendor') {
+                    $product->vendor_id = $vendor_id;
+                } else {
+                    $product->vendor_id = 0;
+                }
             }
 
             if (empty($data['product_discount'])) {
@@ -398,5 +403,4 @@ class ProductController extends Controller
         $message = "Product image has been deleted successfully!";
         return redirect()->back()->with('success_message', $message);
     }
-
 }

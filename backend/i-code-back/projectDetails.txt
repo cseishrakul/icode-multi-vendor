@@ -319,8 +319,25 @@
     34.1 Lets have Newsletter controller in admin controller and from there lets show subscriber list in admin panel.
     34.1.2 Lets update status from there and lets have option of delete subscriber from this table as well.
     34.2 Lets add a option in frontend so that user can subscriber with there valid email id.for that lets have controller of Newsletter in front and lets add users email with a input form and via ajax.
+    34.3 with the help of maatwebsite package lets export subscribers data on excel file
 
+    35. Lets fix some bugs:
+        35.1-> when we are editing any product from admin panel if that product added by vendor then when admin editing this product its becoming admin product.
+        35.2-> after editing a product in cart by user.if before the user could order it if another users order it and its stock become low for the quantity selected by this user then order is placing and stock becoming in minus in admin panel.
 
+    36. Lets create rating model and db_table and lets have data field:
+            $table->integer('user_id');
+            $table->integer('product_id');
+            $table->text('review');
+            $table->integer('rating');
+            $table->tinyInteger('status');
+
+    36.1 Lets have a rating controller in admin and lets fetch all data from rating table.With this to fetch in which product this rating is added and by whom is added lets create belongsTo relation with user and product model in rating model.
+    36.2 Lets update status and delete option in admin panel for every rating via ajax.
+
+    36.2 Lets add rating data in database from frontend.For that lets add review and rating with star.Before adding rating user have to logged in + if one user already rated a product then he/she cant rate it again.AN error message will be shown that you already added rating.
+
+    36.3 Lets show those rating in frontend after approved by admin.
 
 
 

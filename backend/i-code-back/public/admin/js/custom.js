@@ -15,6 +15,7 @@ $(document).ready(function () {
     $("#orders").DataTable();
     $("#shipping").DataTable();
     $("#subscribers").DataTable();
+    $("#rating").DataTable();
     $("#current_password").keyup(function () {
         var current_password = $("#current_password").val();
         // alert(current_password);
@@ -445,6 +446,35 @@ $(document).ready(function () {
                     );
                 } else if (resp["status"] == 1) {
                     $("#subscriber-" + subscriber_id).html(
+                        "<i class='mdi mdi-bookmark-check' style='font-size: 25px;'status='Active'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+    // Update Rating Status
+    $(document).on("click", ".updateRatingStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var rating_id = $(this).attr("rating_id");
+        // alert(admin_id);
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-rating-status",
+            data: { status: status, rating_id: rating_id },
+            success: function (resp) {
+                // alert(resp);
+                if (resp["status"] == 0) {
+                    $("#rating-" + rating_id).html(
+                        "<i class='mdi mdi-bookmark-outline' style='font-size: 25px;'status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#rating-" + rating_id).html(
                         "<i class='mdi mdi-bookmark-check' style='font-size: 25px;'status='Active'></i>"
                     );
                 }
