@@ -30,3 +30,22 @@
 * Backend-laravel:
 1. Lets install laravel and connect it with database.After connecting to the database lets have some users in users table and lets fetch them using api.
 2. For fetch users lets create a controller call ApiController.
+
+
+                /* -------------------------------------------------- */
+                                Our Project Details Here
+                /* -------------------------------------------------- */
+1. Lets create react app and create multiple pages with the help of routes.
+
+2. Lets have laravel project and using api lets create option for user register in user table of project database.lets create controller model for users table.
+
+3. Lets make registration page in react and with the help of number.2 controller lets send data to database from react registration page.
+
+4. 
+
+
+
+
+                /* -------------------------------------------------- */
+                                End Project Details
+                /* -------------------------------------------------- */

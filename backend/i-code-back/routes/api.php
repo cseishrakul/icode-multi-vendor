@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\API\APIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,13 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::namespace('App\Http\Controllers\Api')->group(function(){
-    // User registration api
-    Route::post('register-user',[ApiController::class,'registerUser']);
-
-    // User login api
-    Route::post('login-user',[ApiController::class,'loginUser']);
-
-    // User Profile update api
-    Route::post('update-user',[ApiController::class,'updateUser']);
+Route::namespace('App\Http\Controllers\API')->group(function () {
+    // Register User for react app
+    Route::post('register-user', [APIController::class, 'registerUser']);
 });
