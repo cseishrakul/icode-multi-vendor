@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\APIController;
+use App\Http\Controllers\ApiController as ControllersApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::namespace('App\Http\Controllers\API')->group(function () {
     // Register User for react app
     Route::post('register-user', [APIController::class, 'registerUser']);
+    // Login user for react app
+    Route::post('login-user', [APIController::class, 'loginUser']);
+    // Update user profile
+    Route::post('update-user', [APIController::class, 'updateUser']);
 });

@@ -10,18 +10,37 @@ const Register = () => {
 
   async function Save(event) {
     event.preventDefault();
-    let item = { name, email, mobile, password };
-    // console.warn(item);
-    let result = await fetch("http://127.0.0.1:8000/api/register-user", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(item),
-    });
-    result = await result.json();
-    console.warn("result", result);
-    navigate("/thanks");
+    let filter =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (name == "") {
+      alert("Please enter your name");
+    } else if (email == "") {
+      alert("Please enter your email");
+    } else if (!filter.test(email)) {
+      alert("Please enter your valid email");
+    } else if (mobile == "") {
+      alert("Please enter your phone number");
+    } else if (password == "") {
+      alert("Please enter password");
+    } else {
+      let item = { name, email, mobile, password };
+      // console.warn(item);
+      let result = await fetch("http://127.0.0.1:8000/api/register-user", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(item),
+      });
+      result = await result.json();
+      console.warn("result", result);
+
+      if (result["email"] == "Email already exists") {
+        alert(result["email"]);
+      } else {
+        navigate("/thanks");
+      }
+    }
   }
 
   return (

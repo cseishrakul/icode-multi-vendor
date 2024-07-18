@@ -39,9 +39,13 @@
 
 2. Lets have laravel project and using api lets create option for user register in user table of project database.lets create controller model for users table.
 
-3. Lets make registration page in react and with the help of number.2 controller lets send data to database from react registration page.
+3. Lets make registration page in react and with the help of number.2 controller lets send data to database from react registration page && lets validate our form.
 
-4. 
+4. Lets make login page in react.And from user data table if login email and password match then lets redirect them to another page.
+5. Lets to validation to our login page
+6. Lets create user profile page and if login successfull then redirect to that page.When user will log in they will see account and logout option in navbar or else they will see login and register link in navbar.Lets show user details in user profile account with the help of localStorage option in browser.
+7. Lets update user details from api.
+
 
 
 
