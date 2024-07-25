@@ -3,12 +3,27 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\CmsPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 
 class CmsController extends Controller
 {
+    public function cmsPage()
+    {
+        $currentRoute = url()->current();
+        $currentRoute = str_replace("http://127.0.0.1:8000/", "", $currentRoute);
+        $cmsRoute = CmsPage::select('url')->where('status', 1)->get()->pluck('url')->toArray();
+        if (in_array($currentRoute, $cmsRoute)) {
+            // echo "Page will come";
+            $cmsPageDetails = CmsPage::where('url', $currentRoute)->first()->toArray();
+            return view('front.pages.cms_page', compact('cmsPageDetails'));
+        } else {
+            abort(404);
+        }
+    }
+
     public function contact(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -28,8 +43,8 @@ class CmsController extends Controller
                 'subject.required' => 'Subject is required',
                 'message' => 'Message is required'
             ];
-            $validator = Validator::make($data,$rules,$customMessage);
-            if($validator->fails()){
+            $validator = Validator::make($data, $rules, $customMessage);
+            if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
             // Send user query to admin

@@ -36,7 +36,6 @@
                                 Our Project Details Here
                 /* -------------------------------------------------- */
 1. Lets create react app and create multiple pages with the help of routes.
-
 2. Lets have laravel project and using api lets create option for user register in user table of project database.lets create controller model for users table.
 
 3. Lets make registration page in react and with the help of number.2 controller lets send data to database from react registration page && lets validate our form.
@@ -45,10 +44,32 @@
 5. Lets to validation to our login page
 6. Lets create user profile page and if login successfull then redirect to that page.When user will log in they will see account and logout option in navbar or else they will see login and register link in navbar.Lets show user details in user profile account with the help of localStorage option in browser.
 7. Lets update user details from api.
+8. Lets update user information with the help of reactJs form.
+9. Lets make api of dynamic pages so that we can use them in our reactJs app.
+10. Lets show dynamic about us page in our reactJs project with the help of api which we have make at no.9..
+11. Lets make a api to fetch all categories from our categories db_table.
+12. Lets show them in shop page by there section and category serial.
+13. Lets make api so that we can show category wise product in our reactApp.Like if anyone click on men category then he'll see those products which are from men category.
+14. Lets make listing component in which we can show our each and every products.
+15. Lets create api for fetch every products details so that we can make product details page in our reactJs app.
+16. Lets show products in details page with the help of api from No.15
+17.Lets create Proceed Button in details page so that customer can checkout the product but customer have to login first if they are not logged in..so have to check this before redirecting them to Proceed part.
+18. Lets make api for add-to-cart and with the help of this api we will add our products to the db_table.in cart table lets add new field name -> source->type(enum)->('website','app')->default('website');
+19. Lets add products in cart table from our reactJs details.js page with the help of api from no.18..
+20. Lets stop user to add any product to the cart if they have been already added them to cart and after adding products to the cart lets redirect users to the cart page.
+21. Lets create api so that we can show cart item from db_table to our shopping cart page
+22. Lets show products on cart page whom are selected to cart page with the help of 21 no api
 
-
-
-
+23. Lets create api for deleting products from cart table.
+24. Lets delete cart item from cart page of reactJs with the help of no.23 api.
+25. Lets create checkout api.
+26. Lets fetch data in checkout page with the help of api from no.25.
+27. Lets create delivery address form in checkout page and in navbar lets add cart option.
+28. Lets create two navbar one for before login and one for after  user login
+29. Lets create api for placeing orders in order db_table;
+30. Lets confirm order from no.27 form with the help of no.29 api. And navigate user to thanks-order page.
+31.Lets create api for users-order show.
+32.With the help of this api lets show orders in order page
 
                 /* -------------------------------------------------- */
                                 End Project Details

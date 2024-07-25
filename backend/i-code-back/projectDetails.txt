@@ -339,7 +339,8 @@
 
     36.3 Lets show those rating in frontend after approved by admin.
 
-
+37. Lets create cms pages in admin panel.Lets add,edit delete and show the pages list in admin panel.
+38. Lets show those dynamic pages on our website frontend.
 
 
 

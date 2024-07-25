@@ -6,6 +6,7 @@ const Logout = () => {
   function logout() {
     localStorage.clear();
     navigate("/login");
+    window.location.reload();
   }
   useEffect(() => {
     logout();

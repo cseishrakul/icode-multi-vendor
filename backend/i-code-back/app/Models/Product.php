@@ -58,6 +58,26 @@ class Product extends Model
         return $discounted_price;
     }
 
+    // public static function discountPrice($product_id)
+    // {
+    //     $proDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
+    //     $proDetails = json_decode(json_encode($proDetails), true);
+    //     if (!$proDetails) {
+    //         return 0;
+    //     }
+    //     $catDetails = Category::select('category_discount')->where('id', $proDetails['category_id'])->first();
+    //     $catDetails = json_decode(json_encode($catDetails), true);
+    //     $discounted_price = 0;
+    //     if (isset($proDetails['product_discount']) && $proDetails['product_discount'] > 0) {
+    //         $discounted_price = $proDetails['product_price'] - ($proDetails['product_price'] * $proDetails['product_discount'] / 100);
+    //     } elseif (isset($catDetails['category_discount']) && $catDetails['category_discount'] > 0) {
+    //         $discounted_price = $proDetails['product_price'] - ($proDetails['product_price'] * $catDetails['category_discount'] / 100);
+    //     }
+
+    //     return $discounted_price;
+    // }
+
+
     public static function getDiscountAttributePrice($product_id, $size)
     {
         $proAttrPrice = ProductsAttribute::where(['product_id' => $product_id, 'size' => $size])->first()->toArray();
@@ -101,12 +121,14 @@ class Product extends Model
         return $getProductImage['product_image'];
     }
 
-    public static function getProductStatus($product_id){
-        $getProductStatus = Product::select('status')->where('id',$product_id)->first();
+    public static function getProductStatus($product_id)
+    {
+        $getProductStatus = Product::select('status')->where('id', $product_id)->first();
         return $getProductStatus->status;
     }
 
-    public static function deleteCartProduct($product_id){
-        Cart::where('product_id',$product_id)->delete();
+    public static function deleteCartProduct($product_id)
+    {
+        Cart::where('product_id', $product_id)->delete();
     }
 }

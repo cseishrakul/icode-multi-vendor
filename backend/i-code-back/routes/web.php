@@ -25,6 +25,7 @@ use App\Http\Controllers\Front\RatingController as FrontRatingController;
 use App\Http\Controllers\Front\UserController;
 use App\Http\Controllers\Front\VendorController;
 use App\Models\Category;
+use App\Models\CmsPage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -138,6 +139,9 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // CMS Pages
         Route::get('cms-pages', [CmsController::class, 'cmsPages']);
+        Route::post('update-cms-status', [CmsController::class, 'updateCmsStatus']);
+        Route::get('delete-cms/{id}', [CmsController::class, 'deleteCms']);
+        Route::match(['get', 'post'], 'add-edit-cms-page/{id?}', [CmsController::class, 'addEditCmsPage']);
 
         // Coupon
         Route::get('coupons', [CouponController::class, 'coupons']);
@@ -186,6 +190,12 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // dd($catUrls);die;
     foreach ($catUrls as $key => $url) {
         Route::match(['get', 'post'], '/' . $url, [FrontProductController::class, 'listing']);
+    }
+
+    // Cms Urls
+    $cmsUrls = CmsPage::select('url')->where('status', 1)->get()->pluck('url')->toArray();
+    foreach ($cmsUrls as $url) {
+        Route::get($url, [FrontCmsController::class, 'cmsPage']);
     }
 
     // Vendor Products
@@ -272,6 +282,6 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::post('add-subscriber-email', [NewletterController::class, 'addSubscriber']);
 
     // Rating
-    Route::post("add-rating",[FrontRatingController::class,'addRating']);
+    Route::post("add-rating", [FrontRatingController::class, 'addRating']);
 });
 // End Frontend Route Group

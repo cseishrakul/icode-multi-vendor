@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const user = JSON.stringify(localStorage.getItem("user"));
   const navigate = useNavigate();
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -29,6 +28,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/shop">
+                Shop
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/about">
                 About
               </Link>
@@ -38,33 +42,17 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
-            {localStorage.getItem("user") ? (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/account">
-                    Account
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/logout">
-                    Logout
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    Register
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    Login
-                  </Link>
-                </li>
-              </>
-            )}
+
+            <li className="nav-item">
+              <Link className="nav-link" to="/register">
+                Register
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

@@ -16,6 +16,7 @@ $(document).ready(function () {
     $("#shipping").DataTable();
     $("#subscribers").DataTable();
     $("#rating").DataTable();
+    $("#pages").DataTable();
     $("#current_password").keyup(function () {
         var current_password = $("#current_password").val();
         // alert(current_password);
@@ -475,6 +476,35 @@ $(document).ready(function () {
                     );
                 } else if (resp["status"] == 1) {
                     $("#rating-" + rating_id).html(
+                        "<i class='mdi mdi-bookmark-check' style='font-size: 25px;'status='Active'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+    // Update Pages Status
+    $(document).on("click", ".updateCmsStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var cms_id = $(this).attr("cms_id");
+        // alert(admin_id);
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-cms-status",
+            data: { status: status, cms_id: cms_id },
+            success: function (resp) {
+                // alert(resp);
+                if (resp["status"] == 0) {
+                    $("#cms-" + cms_id).html(
+                        "<i class='mdi mdi-bookmark-outline' style='font-size: 25px;'status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#cms-" + cms_id).html(
                         "<i class='mdi mdi-bookmark-check' style='font-size: 25px;'status='Active'></i>"
                     );
                 }
