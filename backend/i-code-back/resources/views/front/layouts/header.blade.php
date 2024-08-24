@@ -126,9 +126,10 @@ if (Auth::check()) {
             <div class="row clearfix align-items-center">
                 <div class="col-lg-3 col-md-9 col-sm-6">
                     <div class="brand-logo text-lg-center">
-                        <a href="{{ url('/') }}">
-                            <img src="{{ asset('front') }}/images/main-logo/stack-developers-logo.png"
-                                alt="Stack Developers" class="app-brand-logo">
+                        <a href="{{ url('/') }}" class="text-danger font-weight-bold text-uppercase">
+                            {{-- <img src="{{ asset('front') }}/images/main-logo/stack-developers-logo.png"
+                                alt="Stack Developers" class="app-brand-logo"> --}}
+                                I-Code
                         </a>
                     </div>
                 </div>
